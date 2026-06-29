@@ -397,6 +397,12 @@
     height: auto;
     min-height: 0;
     max-height: none;
+    margin: 0;
+    order: -1;
+  }
+
+  .map-container {
+    order: 0;
   }
 
   .map-stats-grid {

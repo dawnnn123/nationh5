@@ -761,6 +761,11 @@ button { border: none; background: none; cursor: pointer; font: inherit; }
 
 .section-title .more-link:hover { color: var(--red-primary); }
 
+.news-scroll-hint,
+.map-scroll-hint {
+  display: none;
+}
+
 .news-layout {
   display: grid;
   grid-template-columns: 1.05fr 1fr 220px;
@@ -1275,13 +1280,24 @@ button { border: none; background: none; cursor: pointer; font: inherit; }
   }
 
   .news-col-list {
-    max-height: min(300px, 42svh);
-    overflow: hidden;
+    display: block;
+    height: auto;
+    min-height: auto;
+    max-height: none;
+    overflow: visible;
   }
 
-  .news-col-main,
-  .news-col-list {
+  .news-col-list .news-list {
+    flex: none;
     height: auto;
+    min-height: auto;
+    overflow: visible;
+  }
+
+  .news-title {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
   }
 
   .news-aside {

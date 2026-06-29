@@ -397,12 +397,65 @@ iframe {
   }
 
   .section-news .news-col-list {
-    max-height: min(280px, 40svh);
-    overflow: hidden;
+    display: block;
+    height: auto;
+    min-height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .section-news .news-col-list .news-list {
+    flex: none;
+    height: auto;
+    min-height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .section-news .news-list a {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .section-news .news-title {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    line-height: 1.45;
   }
 
   .section-news .news-aside {
     overflow: visible;
+  }
+
+  .section-map .map-stats {
+    flex: 0 0 auto;
+    order: -1;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    margin: 0;
+    padding: 14px 16px;
+  }
+
+  .section-map .map-container {
+    flex: 0 0 auto;
+    order: 0;
+    width: 100%;
+  }
+
+  .section-map .map-layout {
+    flex: 0 0 auto;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    height: auto;
+    min-height: 0;
+    gap: 14px;
+    margin: 0;
   }
 
   .section-map .map-title {
@@ -415,38 +468,9 @@ iframe {
     line-height: 1.5;
   }
 
-  .section-map .map-layout {
-    flex: 0 0 auto;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    align-items: stretch;
-    height: auto;
-    min-height: 0;
-    gap: 14px;
-  }
-
-  .section-map .map-container {
-    flex: 0 0 auto;
-    order: 1;
-    width: 100%;
-  }
-
-  .section-map .map-stats {
-    flex: 0 0 auto;
-    order: 2;
-    width: 100%;
-    min-width: 0;
-    max-width: 100%;
-    height: auto;
-    min-height: 0;
-    max-height: none;
-    margin: 0;
-    padding: 16px;
-  }
-
   .section-map .china-map-board {
     aspect-ratio: 4 / 3;
-    max-height: min(36svh, 280px);
+    max-height: min(32svh, 240px);
   }
 
   .section-map .map-hint {
@@ -459,6 +483,24 @@ iframe {
   .section-messages .messages-layout {
     flex: 0 0 auto;
     min-height: 0;
+  }
+
+  .news-scroll-hint,
+  .map-scroll-hint {
+    display: block;
+    flex-shrink: 0;
+    margin: 0 0 10px;
+    padding: 8px 12px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--news-text-muted, #666);
+    text-align: center;
+    background: rgba(255, 255, 255, 0.72);
+    border-radius: 8px;
+  }
+
+  .section-map .map-scroll-hint {
+    color: var(--text-muted, #666);
   }
 }
 
@@ -474,5 +516,9 @@ iframe {
 
   .messages-form textarea {
     min-height: clamp(72px, 18vw, 96px);
+  }
+
+  .section-map .map-stats-heading {
+    font-size: 18px;
   }
 }

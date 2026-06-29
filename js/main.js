@@ -44,27 +44,6 @@
     }, ANIM_DURATION);
   }
 
-  function findSectionScrollEl(target) {
-    var el = target;
-    while (el) {
-      if (el.classList && (
-        el.classList.contains('section-inner') ||
-        el.classList.contains('map-inner') ||
-        el.classList.contains('messages-inner')
-      )) {
-        var style = window.getComputedStyle(el);
-        var overflowY = style.overflowY;
-        if ((overflowY === 'auto' || overflowY === 'scroll') &&
-            el.scrollHeight > el.clientHeight + 2) {
-          return el;
-        }
-      }
-      if (el.classList && el.classList.contains('section')) break;
-      el = el.parentElement;
-    }
-    return null;
-  }
-
   function shouldScrollInside(scrollEl, delta) {
     if (!scrollEl) return false;
     var maxScroll = scrollEl.scrollHeight - scrollEl.clientHeight;
@@ -74,11 +53,40 @@
     return false;
   }
 
+  function getActiveSectionScrollEl() {
+    var section = sections[currentIndex];
+    if (!section) return null;
+    var candidates = section.querySelectorAll('.section-inner, .map-inner, .messages-inner');
+    for (var i = 0; i < candidates.length; i++) {
+      var el = candidates[i];
+      var style = window.getComputedStyle(el);
+      var overflowY = style.overflowY;
+      if ((overflowY === 'auto' || overflowY === 'scroll') &&
+          el.scrollHeight > el.clientHeight + 2) {
+        return el;
+      }
+    }
+    return null;
+  }
+
+  function isMobileViewport() {
+    return window.matchMedia('(max-width: 768px)').matches;
+  }
+
+  function canSwitchSectionOnSwipe(scrollEl, diff) {
+    if (!scrollEl) return true;
+    var maxScroll = scrollEl.scrollHeight - scrollEl.clientHeight;
+    if (maxScroll <= 1) return true;
+    var top = scrollEl.scrollTop;
+    if (diff > 0) return top >= maxScroll - 12;
+    return top <= 12;
+  }
+
   function handleWheel(e) {
     if (e.target.closest('textarea, input, select, .messages-form')) return;
 
-    var scrollEl = findSectionScrollEl(e.target);
-    if (shouldScrollInside(scrollEl, e.deltaY)) return;
+    var scrollEl = getActiveSectionScrollEl();
+    if (scrollEl && shouldScrollInside(scrollEl, e.deltaY)) return;
 
     e.preventDefault();
     if (wheelLocked || isAnimating) return;
@@ -99,11 +107,21 @@
   }
 
   var touchStartY = 0;
-  var touchScrollEl = null;
+  var touchStartScrollTop = 0;
+  var touchDidInnerScroll = false;
 
   document.addEventListener('touchstart', function (e) {
     touchStartY = e.touches[0].clientY;
-    touchScrollEl = findSectionScrollEl(e.target);
+    touchDidInnerScroll = false;
+    var scrollEl = getActiveSectionScrollEl();
+    touchStartScrollTop = scrollEl ? scrollEl.scrollTop : 0;
+  }, { passive: true });
+
+  document.addEventListener('touchmove', function () {
+    var scrollEl = getActiveSectionScrollEl();
+    if (scrollEl && Math.abs(scrollEl.scrollTop - touchStartScrollTop) > 4) {
+      touchDidInnerScroll = true;
+    }
   }, { passive: true });
 
   document.addEventListener('touchend', function (e) {
@@ -111,7 +129,14 @@
     var diff = touchStartY - e.changedTouches[0].clientY;
     if (Math.abs(diff) < 50) return;
 
-    if (shouldScrollInside(touchScrollEl, diff)) return;
+    if (touchDidInnerScroll) return;
+
+    var scrollEl = getActiveSectionScrollEl();
+    if (isMobileViewport() && scrollEl) {
+      if (!canSwitchSectionOnSwipe(scrollEl, diff)) return;
+    } else if (scrollEl && shouldScrollInside(scrollEl, diff)) {
+      return;
+    }
 
     wheelLocked = true;
     if (diff > 0) goToSection(currentIndex + 1);
