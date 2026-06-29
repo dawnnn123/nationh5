@@ -44,8 +44,42 @@
     }, ANIM_DURATION);
   }
 
+  function findSectionScrollEl(target) {
+    var el = target;
+    while (el) {
+      if (el.classList && (
+        el.classList.contains('section-inner') ||
+        el.classList.contains('map-inner') ||
+        el.classList.contains('messages-inner')
+      )) {
+        var style = window.getComputedStyle(el);
+        var overflowY = style.overflowY;
+        if ((overflowY === 'auto' || overflowY === 'scroll') &&
+            el.scrollHeight > el.clientHeight + 2) {
+          return el;
+        }
+      }
+      if (el.classList && el.classList.contains('section')) break;
+      el = el.parentElement;
+    }
+    return null;
+  }
+
+  function shouldScrollInside(scrollEl, delta) {
+    if (!scrollEl) return false;
+    var maxScroll = scrollEl.scrollHeight - scrollEl.clientHeight;
+    if (maxScroll <= 1) return false;
+    if (delta > 0 && scrollEl.scrollTop < maxScroll - 2) return true;
+    if (delta < 0 && scrollEl.scrollTop > 2) return true;
+    return false;
+  }
+
   function handleWheel(e) {
     if (e.target.closest('textarea, input, select, .messages-form')) return;
+
+    var scrollEl = findSectionScrollEl(e.target);
+    if (shouldScrollInside(scrollEl, e.deltaY)) return;
+
     e.preventDefault();
     if (wheelLocked || isAnimating) return;
 
@@ -65,14 +99,20 @@
   }
 
   var touchStartY = 0;
+  var touchScrollEl = null;
+
   document.addEventListener('touchstart', function (e) {
     touchStartY = e.touches[0].clientY;
+    touchScrollEl = findSectionScrollEl(e.target);
   }, { passive: true });
 
   document.addEventListener('touchend', function (e) {
     if (isAnimating || wheelLocked) return;
     var diff = touchStartY - e.changedTouches[0].clientY;
     if (Math.abs(diff) < 50) return;
+
+    if (shouldScrollInside(touchScrollEl, diff)) return;
+
     wheelLocked = true;
     if (diff > 0) goToSection(currentIndex + 1);
     else goToSection(currentIndex - 1);

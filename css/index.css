@@ -347,9 +347,22 @@
 }
 
 @media (max-width: 768px) {
+  .section-map .section-inner,
+  .section-map .map-inner {
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    justify-content: flex-start;
+  }
+
   .map-layout {
     flex-direction: column;
-    gap: 24px;
+    flex: 0 0 auto;
+    height: auto;
+    min-height: 0;
+    gap: 14px;
+    align-items: stretch;
   }
 
   .map-container {
@@ -363,6 +376,7 @@
 
   .china-map-board {
     aspect-ratio: 4 / 3;
+    max-height: min(36svh, 280px);
   }
 
   .province {

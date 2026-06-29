@@ -352,14 +352,113 @@ iframe {
   }
 }
 
-/* ===== 首页地图 / 留言 ===== */
+/* ===== 首页：资讯 / 地图 / 留言（手机屏内滚动） ===== */
 @media (max-width: 768px) {
   .section-inner {
     width: 100%;
   }
 
-  .map-layout {
-    flex-wrap: wrap;
+  .section-news .section-inner,
+  .section-map .section-inner,
+  .section-map .map-inner,
+  .section-messages .messages-inner {
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    justify-content: flex-start;
+    align-items: stretch;
+    padding-bottom: 28px;
+  }
+
+  .section-news {
+    --news-block-h: auto;
+  }
+
+  .section-news .section-title {
+    margin-bottom: 14px;
+  }
+
+  .section-news .news-layout {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 auto;
+    height: auto;
+    min-height: 0;
+    gap: 14px;
+  }
+
+  .section-news .news-layout > * {
+    position: relative;
+    flex: 0 0 auto;
+    width: 100%;
+    height: auto;
+    max-height: none;
+  }
+
+  .section-news .news-col-list {
+    max-height: min(280px, 40svh);
+    overflow: hidden;
+  }
+
+  .section-news .news-aside {
+    overflow: visible;
+  }
+
+  .section-map .map-title {
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+
+  .section-map .map-title .subtitle {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .section-map .map-layout {
+    flex: 0 0 auto;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    height: auto;
+    min-height: 0;
+    gap: 14px;
+  }
+
+  .section-map .map-container {
+    flex: 0 0 auto;
+    order: 1;
+    width: 100%;
+  }
+
+  .section-map .map-stats {
+    flex: 0 0 auto;
+    order: 2;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    margin: 0;
+    padding: 16px;
+  }
+
+  .section-map .china-map-board {
+    aspect-ratio: 4 / 3;
+    max-height: min(36svh, 280px);
+  }
+
+  .section-map .map-hint {
+    flex-shrink: 0;
+    margin-top: 4px;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .section-messages .messages-layout {
+    flex: 0 0 auto;
+    min-height: 0;
   }
 }
 
