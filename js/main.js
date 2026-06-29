@@ -29,6 +29,16 @@
     if (backTop) {
       backTop.classList.toggle('visible', index > 0);
     }
+
+    try {
+      window.dispatchEvent(new CustomEvent('fullpage-section', {
+        detail: {
+          index: index,
+          section: sections[index] || null,
+          id: sections[index] ? sections[index].id : ''
+        }
+      }));
+    } catch (e) { /* ignore */ }
   }
 
   function goToSection(index, force) {

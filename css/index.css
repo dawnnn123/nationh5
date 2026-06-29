@@ -710,7 +710,7 @@
 .message-lane {
   flex: 1;
   position: relative;
-  min-height: 0;
+  min-height: 52px;
   overflow: hidden;
 }
 
@@ -729,9 +729,10 @@
   line-height: 1.45;
   color: #4a3540;
   pointer-events: auto;
-  animation: messageFloatLeft linear forwards;
+  transform: translateY(-50%) translateX(0);
   will-change: transform;
   overflow: hidden;
+  z-index: 1;
 }
 
 .message-body {
@@ -746,7 +747,6 @@
 }
 
 .message-bubble:hover {
-  animation-play-state: paused;
   z-index: 20;
   box-shadow: 0 10px 28px rgba(143, 54, 88, 0.2);
 }
@@ -836,8 +836,19 @@
     max-height: min(148px, 24vh);
   }
 
+  .messages-board-wrap {
+    flex: 1 1 auto;
+    min-height: 280px;
+    width: 100%;
+  }
+
   .messages-board {
     min-height: 280px;
+    height: clamp(280px, 38vh, 380px);
+  }
+
+  .message-lane {
+    min-height: 56px;
   }
 
   .message-bubble {

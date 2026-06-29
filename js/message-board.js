@@ -1,5 +1,5 @@
 /**
- * 同心寄语留言板 — 独立轨道、随机错开、固定安全间距接力
+ * 同心寄语留言板 — rAF 驱动飘动（兼容 Android / Vivo 等不支持 keyframes 内 CSS 变量的浏览器）
  */
 (function () {
   'use strict';
@@ -12,8 +12,9 @@
   var LANE_GAP_JITTER_MAX = 0.42;
   var LANE_MAX = 2;
   var LANE_START_MIN = 0.15;
-  var LANE_START_MAX = 4.8;
-  var LANE_RETRY_SEC = 0.16;
+  var LANE_START_MAX = 2.2;
+  var LANE_RETRY_SEC = 0.2;
+  var WATCHDOG_MS = 2000;
 
   function getLaneCount() {
     return window.matchMedia('(max-width: 768px)').matches ? 4 : 5;
@@ -21,6 +22,7 @@
 
   var form = document.getElementById('messageForm');
   var board = document.getElementById('messageBoard');
+  var section = document.getElementById('section-messages');
   var tipEl = document.getElementById('messageTip');
   var nicknameInput = document.getElementById('messageNickname');
   var contentInput = document.getElementById('messageContent');
@@ -30,9 +32,13 @@
   var laneEls = [];
   var laneTimers = [];
   var laneNextTimer = [];
+  var floatAnims = [];
+  var rafId = null;
   var resizeTimer = null;
+  var watchdogTimer = null;
   var currentList = [];
   var spawning = false;
+  var boardActive = false;
 
   var defaultMessages = [
     { id: 'seed-1', nickname: '阿依古丽', content: '民族团结就是你把我的孩子当你的孩子。', createdAt: 0 },
@@ -84,7 +90,7 @@
   function saveMessages(list) {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-    } catch (e) { /* ignore quota errors */ }
+    } catch (e) { /* ignore */ }
   }
 
   function showTip(msg) {
@@ -101,6 +107,10 @@
       .replace(/"/g, '&quot;');
   }
 
+  function isSectionActive() {
+    return section && section.classList.contains('active');
+  }
+
   function clearLaneTimers() {
     laneTimers.forEach(function (timer) {
       window.clearTimeout(timer);
@@ -110,6 +120,22 @@
       if (timer) window.clearTimeout(timer);
       laneNextTimer[i] = null;
     });
+  }
+
+  function clearFloatAnims() {
+    floatAnims.forEach(function (anim) {
+      if (anim.fallbackTimer) window.clearTimeout(anim.fallbackTimer);
+    });
+    floatAnims = [];
+    if (rafId !== null) {
+      window.cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+  }
+
+  function trackLaneTimer(timer) {
+    laneTimers.push(timer);
+    return timer;
   }
 
   function scheduleLaneSpawn(laneIdx, delaySec) {
@@ -125,7 +151,6 @@
     trackLaneTimer(timer);
   }
 
-  /** 前一条飘出足够间距后 spawn 下一条（秒） */
   function calcFollowDelaySec(bubbleWidth) {
     var gapPx = randomBetween(LANE_GAP_MIN, LANE_GAP_MAX);
     var jitterSec = randomBetween(LANE_GAP_JITTER_MIN, LANE_GAP_JITTER_MAX);
@@ -161,6 +186,15 @@
     return lane.querySelectorAll('.message-bubble').length;
   }
 
+  function getBoardLaneWidth(laneEl) {
+    var w = laneEl.clientWidth;
+    if (w >= 48) return w;
+    w = board.clientWidth;
+    if (w >= 48) return w;
+    var rect = board.getBoundingClientRect();
+    return rect.width >= 48 ? rect.width : 0;
+  }
+
   function createBubbleEl(msg, laneIdx) {
     var bubble = document.createElement('div');
     bubble.className = 'message-bubble';
@@ -183,15 +217,90 @@
 
   function removeBubblesById(id) {
     board.querySelectorAll('.message-bubble[data-id="' + id + '"]').forEach(removeBubble);
+    floatAnims = floatAnims.filter(function (anim) {
+      if (anim.el.getAttribute('data-id') === id) {
+        if (anim.fallbackTimer) window.clearTimeout(anim.fallbackTimer);
+        anim.done = true;
+        return false;
+      }
+      return true;
+    });
   }
 
-  function trackLaneTimer(timer) {
-    laneTimers.push(timer);
-    return timer;
+  function setBubbleTransform(bubble, x) {
+    bubble.style.transform = 'translateY(-50%) translateX(' + x + 'px)';
+  }
+
+  function finishAnim(anim) {
+    if (anim.done) return;
+    anim.done = true;
+    if (anim.fallbackTimer) window.clearTimeout(anim.fallbackTimer);
+    var laneIdx = anim.laneIdx;
+    removeBubble(anim.el);
+    floatAnims = floatAnims.filter(function (a) { return a !== anim; });
+    if (spawning && getLaneBubbleCount(laneIdx) === 0 && !laneNextTimer[laneIdx]) {
+      scheduleLaneSpawn(laneIdx, randomBetween(0.35, 0.9));
+    }
+  }
+
+  function tickFloat(now) {
+    if (!spawning) {
+      rafId = null;
+      return;
+    }
+
+    for (var i = floatAnims.length - 1; i >= 0; i--) {
+      var anim = floatAnims[i];
+      if (anim.done || !anim.el.parentNode) {
+        floatAnims.splice(i, 1);
+        continue;
+      }
+
+      if (anim.paused) {
+        if (!anim.pauseStart) anim.pauseStart = now;
+        continue;
+      }
+
+      if (anim.pauseStart) {
+        anim.t0 += (now - anim.pauseStart);
+        anim.pauseStart = 0;
+      }
+
+      if (!anim.t0) anim.t0 = now;
+      var elapsed = now - anim.t0;
+      var progress = Math.min(elapsed / anim.duration, 1);
+      var x = anim.startX + (anim.endX - anim.startX) * progress;
+      setBubbleTransform(anim.el, x);
+
+      if (progress >= 1) {
+        finishAnim(anim);
+      }
+    }
+
+    if (spawning) {
+      rafId = window.requestAnimationFrame(tickFloat);
+    } else {
+      rafId = null;
+    }
+  }
+
+  function startRafLoop() {
+    if (rafId === null) {
+      rafId = window.requestAnimationFrame(tickFloat);
+    }
+  }
+
+  function bindBubbleHover(anim) {
+    anim.el.addEventListener('mouseenter', function () {
+      anim.paused = true;
+    });
+    anim.el.addEventListener('mouseleave', function () {
+      anim.paused = false;
+    });
   }
 
   function spawnOnLane(laneIdx) {
-    if (!spawning || !currentList.length) return;
+    if (!spawning || !currentList.length || !isSectionActive()) return;
 
     var laneEl = laneEls[laneIdx];
     if (!laneEl) return;
@@ -201,9 +310,7 @@
       return;
     }
 
-    var laneWidth = laneEl.clientWidth || board.clientWidth || 640;
-
-    /* 屏未可见时宽度可能为 0，延后重试 */
+    var laneWidth = getBoardLaneWidth(laneEl);
     if (laneWidth < 48) {
       scheduleLaneSpawn(laneIdx, LANE_RETRY_SEC);
       return;
@@ -212,38 +319,42 @@
     var msg = pickRandomMessage(currentList);
     var bubble = createBubbleEl(msg, laneIdx);
 
-    laneEl.style.setProperty('--lane-width', laneWidth + 'px');
     laneEl.appendChild(bubble);
-
-    var bubbleWidth = bubble.offsetWidth;
-    var travel = laneWidth + bubbleWidth + 24;
-    var duration = travel / FLOAT_SPEED;
-
-    bubble.style.animationDuration = duration + 's';
+    setBubbleTransform(bubble, 0);
     bubble.style.top = (50 + randomBetween(-7, 7)) + '%';
 
+    var bubbleWidth = bubble.offsetWidth || 200;
+    var endX = -(laneWidth + bubbleWidth + 24);
+    var durationMs = ((laneWidth + bubbleWidth + 24) / FLOAT_SPEED) * 1000;
+
+    var anim = {
+      el: bubble,
+      laneIdx: laneIdx,
+      startX: 0,
+      endX: endX,
+      duration: durationMs,
+      t0: 0,
+      paused: false,
+      pauseStart: 0,
+      done: false,
+      fallbackTimer: null
+    };
+
+    anim.fallbackTimer = window.setTimeout(function () {
+      finishAnim(anim);
+    }, durationMs + 1000);
+
+    floatAnims.push(anim);
+    bindBubbleHover(anim);
+    startRafLoop();
     scheduleLaneFollow(laneIdx, bubbleWidth);
-
-    var bubbleDone = false;
-    function onBubbleDone() {
-      if (bubbleDone) return;
-      bubbleDone = true;
-      window.clearTimeout(fallbackTimer);
-      removeBubble(bubble);
-      if (getLaneBubbleCount(laneIdx) === 0 && !laneNextTimer[laneIdx]) {
-        scheduleLaneSpawn(laneIdx, randomBetween(0.35, 0.9));
-      }
-    }
-
-    var fallbackTimer = window.setTimeout(onBubbleDone, (duration + 0.6) * 1000);
-
-    bubble.addEventListener('animationend', onBubbleDone, { once: true });
   }
 
   function startFloating(list) {
     currentList = list.slice();
     spawning = true;
     clearLaneTimers();
+    clearFloatAnims();
     buildLanes();
 
     if (!currentList.length) {
@@ -254,11 +365,16 @@
     laneEls.forEach(function (_, laneIdx) {
       scheduleLaneSpawn(laneIdx, randomBetween(LANE_START_MIN, LANE_START_MAX));
     });
+
+    startWatchdog();
+    startRafLoop();
   }
 
   function stopFloating() {
     spawning = false;
     clearLaneTimers();
+    clearFloatAnims();
+    stopWatchdog();
   }
 
   function renderBoard(list) {
@@ -267,11 +383,48 @@
   }
 
   function fillEmptyLanes() {
+    if (!spawning || !isSectionActive()) return;
     laneEls.forEach(function (_, laneIdx) {
       if (getLaneBubbleCount(laneIdx) === 0 && !laneNextTimer[laneIdx]) {
-        scheduleLaneSpawn(laneIdx, randomBetween(0.25, 1.1));
+        scheduleLaneSpawn(laneIdx, randomBetween(0.2, 0.8));
       }
     });
+    if (floatAnims.length) startRafLoop();
+  }
+
+  function startWatchdog() {
+    stopWatchdog();
+    watchdogTimer = window.setInterval(fillEmptyLanes, WATCHDOG_MS);
+  }
+
+  function stopWatchdog() {
+    if (watchdogTimer) {
+      window.clearInterval(watchdogTimer);
+      watchdogTimer = null;
+    }
+  }
+
+  function activateBoard() {
+    if (!isSectionActive()) return;
+    if (boardActive && spawning) {
+      fillEmptyLanes();
+      return;
+    }
+    boardActive = true;
+    window.requestAnimationFrame(function () {
+      window.requestAnimationFrame(function () {
+        if (!isSectionActive()) return;
+        renderBoard(loadMessages());
+      });
+    });
+  }
+
+  function deactivateBoard() {
+    if (!boardActive && !spawning) return;
+    boardActive = false;
+    stopFloating();
+    board.innerHTML = '';
+    laneEls = [];
   }
 
   function deleteMessage(id) {
@@ -282,9 +435,7 @@
     removeBubblesById(id);
     currentList = list.slice();
     if (!currentList.length) {
-      stopFloating();
-      board.innerHTML = '';
-      laneEls = [];
+      deactivateBoard();
       return;
     }
     fillEmptyLanes();
@@ -324,7 +475,9 @@
     saveMessages(list);
     currentList = list.slice();
     if (!spawning) {
-      startFloating(list);
+      activateBoard();
+    } else {
+      fillEmptyLanes();
     }
     form.reset();
   });
@@ -343,40 +496,53 @@
   window.addEventListener('resize', function () {
     window.clearTimeout(resizeTimer);
     resizeTimer = window.setTimeout(function () {
-      var section = document.getElementById('section-messages');
-      if (section && !section.classList.contains('active')) return;
+      if (!isSectionActive()) return;
       renderBoard(currentList.length ? currentList : loadMessages());
-    }, 200);
+    }, 250);
   });
 
-  function bindSectionVisibility() {
-    var section = document.getElementById('section-messages');
-    if (!section) {
-      startFloating(loadMessages());
-      return;
+  window.addEventListener('fullpage-section', function (e) {
+    var detail = e.detail || {};
+    if (detail.id === 'section-messages') {
+      activateBoard();
+    } else if (boardActive || spawning) {
+      deactivateBoard();
+    }
+  });
+
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden && isSectionActive()) {
+      activateBoard();
+    }
+  });
+
+  if (section) {
+    if (typeof MutationObserver !== 'undefined') {
+      var wasActive = section.classList.contains('active');
+      var classObserver = new MutationObserver(function () {
+        var isActive = section.classList.contains('active');
+        if (isActive && !wasActive) activateBoard();
+        else if (!isActive && wasActive) deactivateBoard();
+        wasActive = isActive;
+      });
+      classObserver.observe(section, { attributes: true, attributeFilter: ['class'] });
     }
 
-    var wasActive = section.classList.contains('active');
-
-    function onActiveChange() {
-      var isActive = section.classList.contains('active');
-      if (isActive && !wasActive) {
-        renderBoard(loadMessages());
-      } else if (!isActive && wasActive) {
-        stopFloating();
-        board.innerHTML = '';
-        laneEls = [];
-      }
-      wasActive = isActive;
+    if (typeof IntersectionObserver !== 'undefined') {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting && entry.intersectionRatio > 0.08 && isSectionActive()) {
+            activateBoard();
+          }
+        });
+      }, { threshold: [0, 0.08, 0.25] });
+      io.observe(board);
     }
 
-    var observer = new MutationObserver(onActiveChange);
-    observer.observe(section, { attributes: true, attributeFilter: ['class'] });
-
-    if (wasActive) {
-      renderBoard(loadMessages());
+    if (section.classList.contains('active')) {
+      activateBoard();
     }
+  } else {
+    startFloating(loadMessages());
   }
-
-  bindSectionVisibility();
 })();
