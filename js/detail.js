@@ -104,9 +104,30 @@
     });
   }
 
+  /** 站点根路径（兼容 GitHub Pages 子目录，如 /nationh5/） */
+  function getSiteBase() {
+    var path = location.pathname || '/';
+    var pagesIdx = path.indexOf('/pages/');
+    if (pagesIdx !== -1) return path.slice(0, pagesIdx + 1);
+    var lastSlash = path.lastIndexOf('/');
+    if (lastSlash <= 0) return '/';
+    var file = path.slice(lastSlash + 1);
+    if (file && file.indexOf('.') !== -1) return path.slice(0, lastSlash + 1);
+    return path.endsWith('/') ? path : path + '/';
+  }
+
+  function resolveImagePath(src) {
+    if (!src) return '';
+    if (/^https?:\/\//i.test(src)) return src;
+    var clean = src.replace(/^\/+/, '');
+    return getSiteBase() + clean;
+  }
+
   function renderCover(article) {
     if (article.image) {
-      return '<figure class="detail-cover"><img src="' + article.image + '" alt=""></figure>';
+      var imgSrc = resolveImagePath(article.image);
+      var alt = article.title ? article.title.replace(/"/g, '&quot;') : '';
+      return '<figure class="detail-cover"><img src="' + imgSrc + '" alt="' + alt + '"></figure>';
     }
     return '<figure class="detail-cover detail-cover-placeholder" aria-hidden="true"><span>头图占位 · 可在 js/news-data.js 对应条目的 image 字段填入图片路径</span></figure>';
   }

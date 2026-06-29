@@ -87,9 +87,9 @@ html.detail-page body {
 }
 .detail-hero.theme-default { background-image: linear-gradient(135deg, #5d4037, #8d6e63); }
 
-.detail-hero.theme-unity-handshake { background-image: url("/images/VCG211437936347.jpg"); }
-.detail-hero.theme-unity-prosper { background-image: url("/images/VCG211584983908.jpg"); }
-.detail-hero.theme-unity-identity { background-image: url("/images/VCG211538739159.jpg"); }
+.detail-hero.theme-unity-handshake { background-image: url("../images/VCG211437936347.jpg"); }
+.detail-hero.theme-unity-prosper { background-image: url("../images/VCG211584983908.jpg"); }
+.detail-hero.theme-unity-identity { background-image: url("../images/VCG211538739159.jpg"); }
 
 .detail-hero.theme-news { background-image: linear-gradient(135deg, #5d4037, #8d6e63 50%, #7f0000); }
 
@@ -259,6 +259,19 @@ html.detail-page body {
 
   .detail-body {
     padding: 28px 20px 48px;
+  }
+
+  .detail-cover {
+    margin-bottom: 20px;
+    border-radius: 6px;
+  }
+
+  .detail-cover img {
+    width: 100%;
+    max-height: none;
+    height: auto;
+    min-height: 160px;
+    object-fit: cover;
   }
 }
 
