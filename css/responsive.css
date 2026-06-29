@@ -554,7 +554,10 @@ iframe {
     min-height: 0;
   }
 
-  .news-scroll-hint,
+  .news-scroll-hint {
+    display: none !important;
+  }
+
   .map-scroll-hint {
     display: block;
     flex-shrink: 0;
