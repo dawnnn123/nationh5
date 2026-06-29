@@ -75,6 +75,9 @@
 
   function findScrollableFromTarget(section, target) {
     if (!section || !target) return null;
+    if (section.id === 'section-banner' || section.id === 'section-projects') {
+      return null;
+    }
     var node = target;
     while (node && node !== section && node !== document.body) {
       if (node.nodeType !== 1) {
@@ -95,6 +98,11 @@
   function getScrollableInSection(section) {
     if (!section) return null;
 
+    /* 轮播、项目名录：不做屏内滚动，避免手机/微信滑不回去 */
+    if (section.id === 'section-banner' || section.id === 'section-projects') {
+      return null;
+    }
+
     if (section.id === 'section-messages' && isMobileViewport()) {
       var secStyle = window.getComputedStyle(section);
       if ((secStyle.overflowY === 'auto' || secStyle.overflowY === 'scroll') &&
@@ -103,7 +111,7 @@
       }
     }
 
-    var selectors = ['.messages-inner', '.section-inner', '.map-inner', '.project-stage'];
+    var selectors = ['.messages-inner', '.section-inner', '.map-inner'];
     for (var s = 0; s < selectors.length; s++) {
       var nodes = section.querySelectorAll(selectors[s]);
       for (var i = 0; i < nodes.length; i++) {
@@ -444,6 +452,38 @@
       }
     });
   }
+
+  function pauseVideoWhenLeaveBanner() {
+    if (!slideVideo) return;
+    videoSoundOn = false;
+    slideVideo.muted = true;
+    slideVideo.volume = 0;
+    slideVideo.pause();
+    updateSoundBtn();
+    updateVideoPlayBtn();
+  }
+
+  function resumeVideoOnBanner() {
+    if (!slideVideo || !isVideoSlide(slideIndex)) return;
+    videoSoundOn = false;
+    slideVideo.muted = true;
+    slideVideo.volume = 0;
+    if (isWeChatBrowser()) {
+      updateVideoPlayBtn();
+      return;
+    }
+    tryPlayVideo(slideVideo);
+    updateSoundBtn();
+  }
+
+  window.addEventListener('fullpage-section', function (e) {
+    var detail = e.detail || {};
+    if (detail.index !== 0) {
+      pauseVideoWhenLeaveBanner();
+    } else {
+      resumeVideoOnBanner();
+    }
+  });
 
   if (slideVideo) {
     bindVideoPlayFallback();

@@ -476,7 +476,7 @@ html.culture-page body.culture-page {
   border-top: 3px solid var(--red-primary);
   padding: 10px 24px 72px;
   scroll-margin-top: var(--header-h);
-  background: url("../images/quiz.jpg");
+  background: url("../images/quiz2.jpg");
 }
 
 .culture-quiz::before {
