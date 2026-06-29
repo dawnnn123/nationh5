@@ -1239,43 +1239,74 @@ button { border: none; background: none; cursor: pointer; font: inherit; }
   }
 
   .section-news {
-    --news-block-h: clamp(380px, calc(100svh - var(--header-h) - 150px), 480px);
+    --news-block-h: auto;
+  }
+
+  .section-news .section-inner {
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 24px;
+  }
+
+  .section-news .section-title {
+    margin-bottom: 16px;
   }
 
   .news-layout {
-    grid-template-columns: 1fr;
-    grid-template-rows: minmax(0, 1.1fr) minmax(0, 1fr) auto;
-    height: var(--news-block-h);
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: 0;
+    gap: 16px;
   }
 
   .news-layout > * {
     height: auto;
-    min-height: 0;
+    max-height: none;
+    width: 100%;
+    flex-shrink: 0;
+  }
+
+  .news-col-main {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .news-col-list {
+    max-height: min(300px, 42svh);
+    overflow: hidden;
   }
 
   .news-col-main,
   .news-col-list {
-    height: 100%;
+    height: auto;
   }
 
   .news-aside {
     height: auto;
     max-height: none;
     flex-direction: column;
+    overflow: visible;
   }
 
   .news-stats {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .news-aside {
-    flex-direction: column;
-  }
-
   .news-feature { flex-direction: column; }
   .news-feature-vertical .news-img,
-  .news-img { width: 100%; min-height: 140px; }
+  .news-img { width: 100%; min-height: 120px; aspect-ratio: 16 / 9; }
   .news-body { padding: 16px; }
+
+  .news-feature-vertical .news-body h3 {
+    font-size: clamp(15px, 4vw, 17px);
+  }
+
+  .news-list a {
+    font-size: clamp(12px, 3.2vw, 14px);
+  }
 }
 
 @media (max-width: 480px) {
@@ -1305,6 +1336,27 @@ button { border: none; background: none; cursor: pointer; font: inherit; }
 
   .project-name { font-size: 13px; }
   .section-projects .section-title h2 { font-size: var(--fs-h2, 20px); }
+
+  .section-news .section-title h2 {
+    font-size: var(--fs-h2, 20px);
+  }
+
+  .section-news .section-title .subtitle {
+    font-size: clamp(12px, 3.2vw, 13px);
+  }
+
+  .news-stats strong {
+    font-size: clamp(16px, 4.5vw, 20px);
+  }
+
+  .news-col-list {
+    max-height: min(260px, 38svh);
+    padding: 14px;
+  }
+
+  .news-aside {
+    padding: 14px;
+  }
 }
 
 @media (max-height: 680px) {
