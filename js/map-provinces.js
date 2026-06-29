@@ -1,0 +1,40 @@
+/**
+ * 省份在地图上的标签位置（百分比，相对 .china-map-board）
+ * 参考中国非物质文化遗产网地图页交互
+ */
+window.MAP_PROVINCES = [
+  { name: '黑龙江', label: '黑龙江省', left: 82, top: 17 },
+  { name: '吉林', label: '吉林省', left: 80, top: 25 },
+  { name: '辽宁', label: '辽宁省', left: 77, top: 33 },
+  { name: '内蒙古', label: '内蒙古自治区', left: 55, top: 37, small: true },
+  { name: '新疆', label: '新疆维吾尔自治区', left: 24, top: 33, small: true },
+  { name: '西藏', label: '西藏自治区', left: 28, top: 55 },
+  { name: '青海', label: '青海省', left: 38, top: 48 },
+  { name: '甘肃', label: '甘肃省', left: 52, top: 50 },
+  { name: '宁夏', label: '宁夏回族自治区', left: 53, top: 44, small: true },
+  { name: '陕西', label: '陕西省', left: 57, top: 53 },
+  { name: '山西', label: '山西省', left: 62, top: 44 },
+  { name: '河北', label: '河北省', left: 68, top: 40 },
+  { name: '北京', label: '北京市', left: 69, top: 35, tiny: true },
+  { name: '天津', label: '天津市', left: 71, top: 38, tiny: true },
+  { name: '山东', label: '山东省', left: 70, top: 46 },
+  { name: '河南', label: '河南省', left: 65, top: 53 },
+  { name: '江苏', label: '江苏省', left: 75, top: 55 },
+  { name: '安徽', label: '安徽省', left: 71, top: 56 },
+  { name: '上海', label: '上海市', left: 78, top: 58, tiny: true },
+  { name: '浙江', label: '浙江省', left: 77, top: 62 },
+  { name: '湖北', label: '湖北省', left: 65, top: 59 },
+  { name: '湖南', label: '湖南省', left: 63, top: 68 },
+  { name: '江西', label: '江西省', left: 70, top: 67 },
+  { name: '福建', label: '福建省', left: 74, top: 71 },
+  { name: '广东', label: '广东省', left: 66, top: 76 },
+  { name: '广西', label: '广西壮族自治区', left: 59, top: 78, small: true },
+  { name: '海南', label: '海南省', left: 61, top: 89 },
+  { name: '重庆', label: '重庆市', left: 56, top: 63, tiny: true },
+  { name: '四川', label: '四川省', left: 49, top: 61 },
+  { name: '贵州', label: '贵州省', left: 55, top: 71 },
+  { name: '云南', label: '云南省', left: 46, top: 75 },
+  { name: '台湾', label: '台湾省', left: 80, top: 76 },
+  { name: '香港', label: '香港', left: 71, top: 77, tiny: true },
+  { name: '澳门', label: '澳门', left: 67, top: 81, tiny: true }
+];

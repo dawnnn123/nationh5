@@ -1,0 +1,573 @@
+/* ===== 民族团结页：可滚动长页 ===== */
+html.unity-page,
+html.unity-page body.unity-page {
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: auto;
+  min-height: 100%;
+  scroll-behavior: smooth;
+}
+
+body.unity-page {
+  position: relative;
+  background: transparent;
+}
+
+body.unity-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: url("../images/1b059cd05b165df7820bda4c742cb70c.jpg") center / cover no-repeat;
+}
+
+.unity-main {
+  background: transparent;
+}
+
+.unity-container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ===== 通用按钮 ===== */
+.unity-btn {
+  display: inline-block;
+  padding: 12px 28px;
+  background: var(--red-dark);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  border-radius: 999px;
+  transition: background 0.3s, transform 0.3s;
+}
+
+.unity-btn:hover {
+  background: var(--red-primary);
+  transform: translateY(-2px);
+}
+
+.unity-btn-outline {
+  background: transparent;
+  border: 2px solid var(--red-dark);
+  color: var(--red-dark);
+}
+
+.unity-btn-outline:hover {
+  background: var(--red-dark);
+  color: #fff;
+}
+
+/* ===== Hero：左图右文 ===== */
+.unity-hero {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  min-height: 420px;
+  background: rgba(250, 246, 240, 0.3);
+}
+
+.unity-hero-media {
+  overflow: hidden;
+}
+
+.unity-hero-media img {
+  width: 100%;
+  height: 100%;
+  min-height: 360px;
+  object-fit: cover;
+  display: block;
+  background: linear-gradient(135deg, #bcaaa4, #8d6e63);
+}
+
+.unity-hero-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 48px 56px;
+  background: rgba(239, 232, 220, 0.4);
+}
+
+.unity-hero-text h1 {
+  font-size: clamp(36px, 5vw, 52px);
+  font-weight: 800;
+  color: var(--red-dark);
+  letter-spacing: 6px;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+.unity-lead {
+  font-size: 16px;
+  color: var(--text-muted);
+  line-height: 2;
+  margin-bottom: 28px;
+  max-width: 420px;
+}
+
+/* ===== 导语 + 三卡片 ===== */
+.unity-intro {
+  padding: 72px 0 64px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.unity-intro h2 {
+  text-align: center;
+  font-size: clamp(22px, 3vw, 32px);
+  color: var(--text-dark);
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.unity-intro-desc {
+  text-align: center;
+  font-size: 15px;
+  color: var(--text-muted);
+  line-height: 2;
+  max-width: 680px;
+  margin: 0 auto 48px;
+}
+
+.unity-card-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.unity-card {
+  background: linear-gradient(180deg, #fdfcfa 0%, #f8f4ed 100%);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out);
+  position: relative;
+}
+
+.unity-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  border: 1.5px solid transparent;
+  background: linear-gradient(145deg, rgba(183, 28, 28, 0.2), rgba(201, 162, 39, 0.25), rgba(183, 28, 28, 0.15)) border-box;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.7;
+  transition: opacity 0.4s var(--ease-out);
+  z-index: 0;
+}
+
+.unity-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.unity-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 40px rgba(183, 28, 28, 0.15), 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.unity-card:hover::after {
+  opacity: 1;
+}
+
+.unity-card-img {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  position: relative;
+}
+
+.unity-card-img::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 60%, rgba(0, 0, 0, 0.15) 100%);
+  pointer-events: none;
+}
+
+.unity-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  background: linear-gradient(135deg, #d7ccc8, #a1887f);
+  transition: transform 0.6s var(--ease-out);
+}
+
+.unity-card:hover .unity-card-img img {
+  transform: scale(1.06);
+}
+
+.unity-card-body {
+  padding: 24px 28px 28px;
+  position: relative;
+}
+
+.unity-card-body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 28px;
+  right: 28px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--red-primary), var(--gold), var(--red-primary));
+  border-radius: 0 0 3px 3px;
+  opacity: 0.6;
+  transform: scaleX(1);
+  transition: opacity 0.4s var(--ease-out);
+}
+
+.unity-card:hover .unity-card-body::before {
+  opacity: 1;
+}
+
+.unity-card-body h3 {
+  font-size: 20px;
+  color: var(--red-dark);
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+  transition: color 0.35s;
+}
+
+.unity-card:hover .unity-card-body h3 {
+  color: var(--red-primary);
+}
+
+.unity-card-meta {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.unity-card-meta::before {
+  content: "◆";
+  font-size: 10px;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+
+.unity-card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--red-primary);
+  letter-spacing: 1px;
+  transition: color 0.3s, gap 0.3s;
+}
+
+.unity-card-link::after {
+  content: "→";
+  transition: transform 0.3s;
+}
+
+.unity-card:hover .unity-card-link {
+  gap: 10px;
+}
+
+.unity-card:hover .unity-card-link::after {
+  transform: translateX(3px);
+}
+
+.unity-card-link:hover {
+  color: var(--gold);
+}
+
+/* ===== 左右分栏特色区块 ===== */
+.unity-feature {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 400px;
+  background: rgba(240, 235, 227, 0.3);
+}
+
+.unity-feature-visual {
+  position: relative;
+  overflow: hidden;
+}
+
+.unity-feature-visual img {
+  width: 100%;
+  height: 100%;
+  min-height: 360px;
+  object-fit: cover;
+  display: block;
+  background: linear-gradient(135deg, #bcaaa4, #6d4c41);
+}
+
+.unity-feature-deco {
+  position: absolute;
+  left: 8%;
+  bottom: 12%;
+  font-size: clamp(40px, 6vw, 72px);
+  font-weight: 900;
+  color: rgba(183, 28, 28, 0.85);
+  letter-spacing: 8px;
+  line-height: 1.1;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+}
+
+.unity-feature-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 48px 56px;
+}
+
+.unity-feature-body h2 {
+  font-size: clamp(24px, 3vw, 34px);
+  color: var(--red-dark);
+  letter-spacing: 3px;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.unity-feature-body p {
+  font-size: 15px;
+  color: var(--text-muted);
+  line-height: 2;
+  margin-bottom: 28px;
+  text-indent: 2em;
+}
+
+/* ===== 3×2 网格 ===== */
+.unity-grid-section {
+  padding: 72px 0 80px;
+  background: rgba(250, 246, 240, 0.3);
+}
+
+.unity-grid-section h2 {
+  text-align: center;
+  font-size: clamp(24px, 3vw, 32px);
+  color: var(--red-dark);
+  letter-spacing: 3px;
+  margin-bottom: 12px;
+}
+
+.unity-grid-desc {
+  text-align: center;
+  font-size: 15px;
+  color: var(--text-muted);
+  margin-bottom: 48px;
+}
+
+.unity-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.unity-grid-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px 24px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s, box-shadow 0.3s;
+  overflow: hidden;
+}
+
+.unity-grid-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(183, 28, 28, 0.1);
+}
+
+.unity-grid-thumb {
+  flex-shrink: 0;
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.unity-grid-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s var(--ease-out);
+}
+
+.unity-grid-item:hover .unity-grid-thumb img {
+  transform: scale(1.1);
+}
+
+.unity-grid-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.unity-grid-item h3 {
+  font-size: 18px;
+  color: var(--red-dark);
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+  position: relative;
+  padding-left: 16px;
+}
+
+.unity-grid-item h3::before {
+  content: "◆";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 10px;
+  color: var(--gold);
+}
+
+.unity-grid-item p {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.9;
+}
+
+/* ===== 底部左右分栏 ===== */
+.unity-stories {
+  display: grid;
+  grid-template-columns: 1fr 0.85fr;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.3);
+  padding: 48px 0;
+}
+
+.unity-stories-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 24px 56px 24px 48px;
+}
+
+.unity-stories-text h2 {
+  font-size: clamp(26px, 3vw, 36px);
+  color: var(--red-dark);
+  letter-spacing: 4px;
+  margin-bottom: 20px;
+}
+
+.unity-stories-text p {
+  font-size: 15px;
+  color: var(--text-muted);
+  line-height: 2;
+  text-indent: 2em;
+  margin-bottom: 20px;
+}
+
+.unity-stories-text .unity-btn {
+  align-self: flex-start;
+  padding: 10px 20px;
+  letter-spacing: 1px;
+}
+
+.unity-stories-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 48px 24px 24px;
+}
+
+.unity-stories-visual img {
+  width: 100%;
+  max-width: 380px;
+  height: auto;
+  object-fit: cover;
+  display: block;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #bcaaa4, #5d4037);
+}
+
+.unity-stories-deco {
+  position: absolute;
+  right: 10%;
+  bottom: 15%;
+  font-size: clamp(48px, 7vw, 88px);
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.92);
+  letter-spacing: 12px;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}
+
+/* ===== 响应式 ===== */
+@media (max-width: 1024px) {
+  .unity-hero,
+  .unity-feature,
+  .unity-stories {
+    grid-template-columns: 1fr;
+  }
+
+  .unity-hero-text,
+  .unity-feature-body,
+  .unity-stories-text {
+    padding: 40px 32px;
+  }
+
+  .unity-stories-visual {
+    padding: 24px 32px;
+  }
+
+  .unity-card-row {
+    grid-template-columns: 1fr;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  .unity-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .unity-feature-deco {
+    writing-mode: horizontal-tb;
+    font-size: 36px;
+    bottom: 8%;
+    left: 5%;
+  }
+}
+
+@media (max-width: 640px) {
+  .unity-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .unity-hero-text h1 {
+    letter-spacing: 3px;
+  }
+
+  .unity-intro {
+    padding: 48px 0;
+  }
+
+  .unity-grid-section {
+    padding: 48px 0 56px;
+  }
+}
+
+@media (max-width: 480px) {
+  .unity-card-row {
+    max-width: min(420px, 100%);
+    padding: 0 var(--pad-x, 16px);
+  }
+
+  .unity-feature-deco {
+    font-size: clamp(24px, 6.5vw, 32px);
+    letter-spacing: clamp(3px, 0.8vw, 6px);
+  }
+}

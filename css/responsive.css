@@ -1,0 +1,379 @@
+/* ===== 全站响应式：适配各设备与浏览器缩放 ===== */
+
+:root {
+  --pad-x: clamp(16px, 4vw, 24px);
+  --fs-body: clamp(14px, 1.6vw, 16px);
+  --fs-h2: clamp(20px, 3.2vw, 28px);
+  --fs-h3: clamp(17px, 2.4vw, 22px);
+  --section-vh: 100vh;
+  --section-vh: 100svh;
+  --section-vh: 100dvh;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  overflow-x: clip;
+}
+
+html:not(:has(.fullpage)) {
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: auto;
+  min-height: 100%;
+}
+
+body:not(:has(.fullpage)) {
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: auto;
+  min-height: 100%;
+  font-size: var(--fs-body);
+}
+
+body.nav-open {
+  overflow: hidden;
+}
+
+img,
+video,
+iframe {
+  max-width: 100%;
+}
+
+.header-inner {
+  max-width: min(1200px, 100%);
+  padding: 0 var(--pad-x);
+}
+
+.section-inner {
+  max-width: min(1200px, 100%);
+  padding: 0 var(--pad-x);
+}
+
+.logo-icon {
+  width: clamp(40px, 10vw, 52px);
+  height: clamp(40px, 10vw, 52px);
+}
+
+.logo-text strong {
+  font-size: clamp(15px, 3.8vw, 20px);
+  letter-spacing: clamp(1px, 0.5vw, 3px);
+}
+
+.logo-text small {
+  font-size: clamp(11px, 2.6vw, 13px);
+}
+
+/* ===== 移动端导航 ===== */
+.nav-toggle {
+  display: none;
+  flex-shrink: 0;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.12);
+  transition: background 0.25s;
+}
+
+.nav-toggle:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.nav-toggle-bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  border-radius: 1px;
+  background: #fff;
+  transition: transform 0.3s var(--ease-out), opacity 0.3s;
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(2) {
+  opacity: 0;
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+@media (max-width: 768px) {
+  :root {
+    --header-h: clamp(64px, 14vw, 72px);
+  }
+
+  .nav-toggle {
+    display: flex;
+  }
+
+  .main-nav {
+    position: fixed;
+    top: var(--header-h);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 8px var(--pad-x) 32px;
+    background: rgba(18, 10, 6, 0.97);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transform: translateX(100%);
+    transition: transform 0.35s var(--ease-out);
+    overflow-y: auto;
+  }
+
+  .main-nav.is-open {
+    transform: translateX(0);
+  }
+
+  .main-nav a {
+    font-size: clamp(17px, 4.2vw, 20px);
+    padding: 16px 8px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .main-nav a::after {
+    display: none;
+  }
+
+  .side-tools {
+    bottom: clamp(16px, 4vw, 24px);
+    right: clamp(12px, 3vw, 24px);
+  }
+}
+
+@media (max-width: 480px) {
+  .slide-video-sound {
+    right: clamp(12px, 4vw, 24px) !important;
+    bottom: clamp(12px, 4vw, 24px) !important;
+  }
+
+  .carousel-btn {
+    width: clamp(32px, 9vw, 40px);
+    height: clamp(32px, 9vw, 40px);
+  }
+
+  .section-title h2 {
+    font-size: var(--fs-h2);
+  }
+
+  .project-name {
+    font-size: clamp(12px, 3.2vw, 14px);
+    letter-spacing: clamp(1px, 0.4vw, 2px);
+  }
+}
+
+/* ===== 平板：首页地图 / 留言（769–1024px） ===== */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .section-map .section-inner,
+  .section-map .map-inner {
+    padding-left: var(--pad-x);
+    padding-right: var(--pad-x);
+  }
+}
+
+/* ===== 详情 / 项目页 ===== */
+@media (max-width: 768px) {
+  .detail-hero h1,
+  .project-hero h1 {
+    font-size: clamp(20px, 5.5vw, 26px);
+  }
+
+  .detail-body,
+  .project-body {
+    padding: clamp(20px, 5vw, 28px) var(--pad-x) clamp(36px, 8vw, 48px);
+  }
+
+  .detail-body p,
+  .project-body p {
+    font-size: clamp(14px, 3.6vw, 16px);
+    line-height: 1.75;
+  }
+}
+
+@media (max-width: 480px) {
+  .detail-hero,
+  .project-hero {
+    height: clamp(120px, 32vw, 160px);
+  }
+
+  .detail-hero h1,
+  .project-hero h1 {
+    font-size: clamp(18px, 5vw, 22px);
+    letter-spacing: clamp(1px, 0.4vw, 2px);
+  }
+
+  .detail-hero-inner,
+  .project-hero-inner {
+    padding: 0 var(--pad-x);
+  }
+
+  .detail-body,
+  .project-body,
+  .project-content {
+    padding: clamp(16px, 4vw, 24px) var(--pad-x) clamp(28px, 7vw, 40px);
+  }
+}
+
+/* ===== 经济页：小屏允许滚动 ===== */
+@media (max-width: 768px) {
+  html.economy-page,
+  html.economy-page body.economy-page {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: auto;
+    min-height: 100%;
+  }
+
+  .economy-stage {
+    height: auto;
+    min-height: 100svh;
+    overflow: visible;
+  }
+
+  .economy-left {
+    overflow: visible;
+  }
+}
+
+@media (max-width: 480px) {
+  .economy-label {
+    font-size: clamp(17px, 4.5vw, 20px);
+    letter-spacing: clamp(2px, 0.6vw, 4px);
+  }
+
+  .economy-menu {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .menu-link {
+    font-size: clamp(12px, 3.2vw, 14px);
+    letter-spacing: clamp(1px, 0.3vw, 2px);
+  }
+
+  .economy-content {
+    padding: clamp(16px, 4vw, 20px) var(--pad-x);
+  }
+
+  .economy-panel h2 {
+    font-size: clamp(18px, 4.8vw, 22px);
+  }
+}
+
+/* ===== 文化页：网格布局已在 culture.css，此处仅保留问答区适配 ===== */
+@media (max-width: 768px) {
+  .culture-quiz {
+    padding-left: var(--pad-x);
+    padding-right: var(--pad-x);
+  }
+
+  .culture-quiz-inner {
+    padding: 0;
+  }
+}
+
+/* ===== 团结页 ===== */
+@media (max-width: 768px) {
+  .unity-hero-text,
+  .unity-feature-body,
+  .unity-stories-text {
+    padding: clamp(28px, 6vw, 40px) var(--pad-x);
+  }
+
+  .unity-stories-visual {
+    padding: clamp(16px, 4vw, 24px) var(--pad-x);
+  }
+
+  .unity-feature-deco {
+    font-size: clamp(28px, 7vw, 36px);
+    letter-spacing: clamp(4px, 1vw, 8px);
+  }
+}
+
+@media (max-width: 480px) {
+  .unity-hero-text h1 {
+    font-size: clamp(22px, 6vw, 28px);
+    letter-spacing: clamp(2px, 0.6vw, 4px);
+  }
+
+  .unity-container {
+    padding-left: var(--pad-x);
+    padding-right: var(--pad-x);
+  }
+
+  .unity-intro,
+  .unity-grid-section {
+    padding-top: clamp(36px, 9vw, 48px);
+    padding-bottom: clamp(40px, 10vw, 56px);
+  }
+}
+
+/* ===== 社会页 ===== */
+@media (max-width: 768px) {
+  .society-feature {
+    padding: clamp(40px, 10vw, 64px) var(--pad-x) clamp(32px, 8vw, 48px);
+    gap: clamp(32px, 8vw, 48px);
+  }
+
+  .society-discover,
+  .society-bridge {
+    padding-left: var(--pad-x);
+    padding-right: var(--pad-x);
+  }
+
+  .society-hero-content h1 {
+    letter-spacing: clamp(4px, 1.2vw, 8px);
+  }
+}
+
+@media (max-width: 480px) {
+  .society-hero-content h1 {
+    letter-spacing: clamp(3px, 1vw, 6px);
+  }
+
+  .society-discover-grid {
+    max-width: 100%;
+  }
+}
+
+/* ===== 首页地图 / 留言 ===== */
+@media (max-width: 768px) {
+  .section-inner {
+    width: 100%;
+  }
+
+  .map-layout {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .map-stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 12px;
+  }
+
+  .map-stats-num {
+    font-size: clamp(18px, 5vw, 22px);
+  }
+
+  .messages-form textarea {
+    min-height: clamp(72px, 18vw, 96px);
+  }
+}

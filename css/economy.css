@@ -1,0 +1,297 @@
+/* ===== 经济页：左大右小，左上方图片 + 左下方内容 ===== */
+html.economy-page,
+html.economy-page body.economy-page {
+  overflow: hidden;
+  height: 100%;
+}
+
+body.economy-page {
+  position: relative;
+  background: transparent;
+}
+
+body.economy-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: url("../images/fd0d24c8c359f0bc156255e897471d5f.jpg") center / cover no-repeat;
+}
+
+.economy-stage {
+  height: 100vh;
+  height: 100svh;
+  display: flex;
+  overflow: hidden;
+  padding-top: var(--header-h);
+  background: transparent;
+}
+
+/* ===== 左侧（占大部分宽度） ===== */
+.economy-left {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* 上方图片区：按宽度固定比例，避免 DevTools 改变视口高度时变形 */
+.economy-visual {
+  flex: 0 0 auto;
+  width: 100%;
+  aspect-ratio: 5 / 2;
+  max-height: 280px;
+  position: relative;
+  overflow: hidden;
+}
+
+.economy-bg {
+  position: absolute;
+  inset: 0;
+  background-color: #ececec;
+  background-image: url("../images/d93dbf72d2b7b87c5153bac9a167bc2c.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.economy-bg-dual {
+  position: absolute;
+  inset: 0;
+  display: none;
+  gap: 0;
+}
+
+.economy-bg-dual img {
+  flex: 1;
+  min-width: 0;
+  width: 50%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.economy-stage[data-panel="aid"] .economy-bg-single {
+  display: none;
+}
+
+.economy-stage[data-panel="aid"] .economy-bg-dual {
+  display: flex;
+}
+
+.economy-stage[data-panel="industry"] .economy-bg-single {
+  background-image: url("../images/industry.png");
+}
+
+.economy-stage[data-panel="prosper"] .economy-bg-single {
+  background-image: url("../images/30a597a7cc7f5f8d3e0b84793230c91c.jpg");
+}
+
+/* 下方内容区 */
+.economy-content {
+  flex: 1;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 28px 48px 36px;
+}
+
+.economy-panel {
+  display: none;
+  animation: economyPanelIn 0.4s var(--ease-out);
+}
+
+.economy-panel.is-active {
+  display: block;
+}
+
+@keyframes economyPanelIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.economy-panel h2 {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--red-dark);
+  letter-spacing: 3px;
+  margin-bottom: 12px;
+}
+
+.economy-panel p {
+  font-size: 15px;
+  color: var(--text-muted);
+  line-height: 2.2;
+  text-indent: 2em;
+}
+
+/* ===== 右侧（较窄） ===== */
+.economy-right {
+  flex: 0 0 auto;
+  width: 38%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 48px;
+  background-color: rgba(255, 255, 255, 0.3);
+  position: relative;
+}
+
+.economy-right::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(201, 162, 39, 0.35), transparent);
+}
+
+.economy-label {
+  margin: 0;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-size: 36px;
+  font-weight: 300;
+  letter-spacing: 14px;
+  color: #333;
+  user-select: none;
+}
+
+.economy-menu {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 40px;
+}
+
+.menu-link {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-size: 20px;
+  font-weight: 100;
+  letter-spacing: 10px;
+  color: #333;
+  transition: color 0.35s, transform 0.35s;
+  position: relative;
+  padding: 8px 0;
+}
+
+.menu-link:hover,
+.menu-link.active {
+  color: var(--red-primary);
+  transform: scale(1.05);
+}
+
+.menu-link.active::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  right: -14px;
+  width: 2px;
+  background: var(--gold);
+}
+
+/* ===== 响应式 ===== */
+@media (max-width: 1024px) {
+  .economy-right {
+    width: 42%;
+    gap: 32px;
+  }
+
+  .economy-label {
+    font-size: 28px;
+    letter-spacing: 10px;
+  }
+
+  .economy-menu { gap: 28px; }
+
+  .menu-link {
+    font-size: 17px;
+    letter-spacing: 7px;
+  }
+
+  .economy-content {
+    padding: 24px 32px 28px;
+  }
+
+  .economy-panel h2 { font-size: 22px; }
+
+  html.economy-page .economy-content {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (max-width: 768px) {
+  .economy-stage {
+    flex-direction: column;
+  }
+
+  .economy-left {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .economy-visual {
+    aspect-ratio: 2 / 1;
+    max-height: 220px;
+  }
+
+  .economy-right {
+    width: 100%;
+    max-width: none;
+    flex-shrink: 0;
+    padding: 20px 16px;
+    gap: 20px;
+    justify-content: center;
+  }
+
+  .economy-right::before { display: none; }
+
+  .economy-label {
+    writing-mode: horizontal-tb;
+    font-size: 20px;
+    letter-spacing: 4px;
+  }
+
+  .economy-menu {
+    flex-direction: row;
+    gap: 16px;
+  }
+
+  .menu-link {
+    writing-mode: horizontal-tb;
+    font-size: 14px;
+    letter-spacing: 2px;
+  }
+
+  .menu-link.active::after {
+    top: auto;
+    bottom: -6px;
+    left: 0;
+    right: 0;
+    width: auto;
+    height: 2px;
+  }
+
+  .economy-content {
+    padding: 20px 20px 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .economy-visual {
+    max-height: min(220px, 38vw);
+  }
+
+  .economy-panel p {
+    font-size: clamp(13px, 3.4vw, 15px);
+  }
+}

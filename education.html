@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>教育 · 中华五十六韵</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <style>
+    .education-page {
+      min-height: var(--section-vh, 100svh);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: calc(var(--header-h, 88px) + 32px) var(--pad-x, 16px) 48px;
+      text-align: center;
+      background: var(--bg-page);
+    }
+
+    .education-page h1 {
+      font-size: var(--fs-h2);
+      color: var(--red-dark);
+      letter-spacing: clamp(2px, 0.6vw, 4px);
+      margin-bottom: 16px;
+    }
+
+    .education-page p {
+      font-size: var(--fs-body);
+      color: var(--text-muted);
+      max-width: min(480px, 100%);
+      line-height: 1.75;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <img src="images/logo.jpg" alt="" class="logo-icon">
+        <div class="logo-text">
+          <strong>中华五十六韵</strong>
+          <small>石榴花开一家亲</small>
+        </div>
+      </a>
+      <button type="button" class="nav-toggle" aria-label="打开菜单" aria-expanded="false">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+      <nav class="main-nav">
+        <a href="index.html">首页</a>
+        <a href="culture.html">文化</a>
+        <a href="economy.html">经济</a>
+        <a href="society.html">社会</a>
+        <a href="unity.html">团结</a>
+        <a href="education.html" class="active">教育</a>
+      </nav>
+    </div>
+  </header>
+  <main class="education-page">
+    <h1>教育专题</h1>
+    <p>页面建设中，敬请期待。</p>
+  </main>
+  <script src="js/nav.js"></script>
+</body>
+</html>

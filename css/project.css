@@ -1,0 +1,172 @@
+html.project-page,
+html.project-page body {
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: auto;
+  min-height: 100%;
+}
+
+.project-main {
+  background: var(--bg-page);
+  min-height: 100vh;
+}
+
+.project-hero {
+  position: relative;
+  margin-top: var(--header-h);
+  height: 200px;
+  overflow: hidden;
+  background-color: #5d4037;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.project-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.5) 100%);
+}
+
+.project-hero-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  height: 100%;
+  padding: 0 24px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  color: #fff;
+}
+
+.project-hero-tag {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 4px 12px;
+  margin-bottom: 10px;
+  font-size: 12px;
+  letter-spacing: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.project-hero h1 {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  line-height: 1.4;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* 插入头图请用 background-image，勿用 background 简写（否则会重复平铺） */
+.project-hero.theme-minning { background-image: url("../images/15e2940d0bf8129c6c5dc7495b841bbb.jpg"); }
+.project-hero.theme-aid { background-image: url("../images/VCG211337688038.jpg"); }
+.project-hero.theme-community { background-image: url("../images/VCG41N1437199033.jpg"); }
+.project-hero.theme-unity56 {
+  background-image: url("../images/87406e3f8c6d8ebd54ebf8e39133d206.jpg");
+}
+.project-hero.theme-education { background-image: url("../images/VCG211398452701.jpg"); }
+.project-hero.theme-default { background-image: linear-gradient(135deg, #5d4037, #8d6e63); }
+
+.project-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+  animation: projectIn 0.6s var(--ease-out);
+}
+
+@keyframes projectIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.project-intro {
+  font-size: 15px;
+  color: var(--text-muted);
+  line-height: 2.1;
+  text-indent: 2em;
+  padding-bottom: 24px;
+  margin-bottom: 8px;
+  border-bottom: 1px dashed #e0d8cc;
+}
+
+.content-block {
+  margin-bottom: 28px;
+  opacity: 0;
+  transform: translateY(16px);
+  animation: blockIn 0.5s var(--ease-out) forwards;
+}
+
+.content-block:nth-child(1) { animation-delay: 0.08s; }
+.content-block:nth-child(2) { animation-delay: 0.16s; }
+.content-block:nth-child(3) { animation-delay: 0.24s; }
+
+@keyframes blockIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.content-block h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--red-dark);
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+
+.content-block h3::before {
+  content: "◆ ";
+  font-size: 11px;
+  color: var(--gold);
+}
+
+.content-block p {
+  font-size: 15px;
+  color: var(--text-muted);
+  line-height: 2.1;
+  text-indent: 2em;
+  margin-bottom: 0.8em;
+}
+
+.project-back {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 16px;
+  padding: 10px 24px;
+  background: var(--red-dark);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  border-radius: 999px;
+  transition: background 0.3s, transform 0.3s;
+}
+
+.project-back:hover {
+  background: var(--red-primary);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .project-hero {
+    height: 160px;
+  }
+
+  .project-hero h1 {
+    font-size: 20px;
+    letter-spacing: 2px;
+  }
+
+  .project-content {
+    padding: 24px 20px 48px;
+  }
+}
+
+@media (max-width: 480px) {
+  .project-content {
+    padding: clamp(16px, 4vw, 24px) var(--pad-x, 16px) clamp(28px, 7vw, 40px);
+  }
+}

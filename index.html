@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>繁榴聚籽，同赴九州风月</title>
+  <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+
+  <!-- 顶部导航（固定） -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="#" class="logo">
+        <img class="logo-icon" src="images/3fe447ffed0e55d756843bd43c893bcd.jpg" alt="logo">
+        <div class="logo-text">
+          <strong>中华五十六韵</strong>
+          <small>一园榴 万众心</small>
+        </div>
+      </a>
+      <nav class="main-nav" id="mainNav">
+        <a href="#section-banner">首页</a>
+        <a href="culture.html">文化</a>
+        <a href="economy.html">经济</a>
+        <a href="society.html">社会</a>
+        <a href="unity.html">团结</a>
+      </nav>
+      <button type="button" class="nav-toggle" id="navToggle" aria-label="打开导航菜单" aria-expanded="false" aria-controls="mainNav">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- 右侧：回到顶部 -->
+  <aside class="side-tools">
+    <button class="tool-btn back-top" id="backTop" title="回到顶部" aria-label="回到顶部">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+        <path d="M12 4l-8 8h5v8h6v-8h5z"/>
+      </svg>
+      <span>顶部</span>
+    </button>
+  </aside>
+
+  <!-- 全屏滚动容器 -->
+  <main class="fullpage" id="fullpage">
+
+    <!-- 第一屏：轮播 Banner -->
+    <section class="section section-banner" id="section-banner" data-index="0">
+      <div class="carousel" id="carousel">
+        <div class="carousel-track" id="carouselTrack">
+
+          <!-- 轮播项 0：视频 -->
+          <div class="carousel-slide active carousel-slide-video" data-slide="0">
+            <div class="slide-bg slide-bg-video">
+              <video
+                class="slide-video"
+                src="videos/index.mp4"
+                muted
+                autoplay
+                playsinline
+                webkit-playsinline
+                preload="auto"
+                aria-label="主题宣传视频"
+              ></video>
+            </div>
+            <div class="slide-caption">
+              <!-- <h2>【 一园榴 万众心 】</h2>
+              <p>石榴花开，籽籽同心</p> -->
+            </div>
+          </div>
+
+          <!-- 轮播项 1：替换 slide-bg 背景图即可 -->
+          <a class="carousel-slide" href="pages/detail.html?id=1" data-slide="1">
+            <div class="slide-bg slide-bg-1"></div>
+            <div class="slide-caption">
+              <!-- <h2>【 石榴花开一家亲 】</h2>
+              <p>各民族像石榴籽一样紧紧抱在一起</p> -->
+            </div>
+          </a>
+
+          <!-- 轮播项 2 -->
+          <a class="carousel-slide" href="pages/detail.html?id=2" data-slide="2">
+            <div class="slide-bg slide-bg-2"></div>
+            <div class="slide-caption">
+              <!-- <h2>【 文化交融 · 美美与共 】</h2>
+              <p>各民族文化交相辉映，中华文明历久弥新</p> -->
+            </div>
+          </a>
+
+          <!-- 轮播项 3 -->
+          <a class="carousel-slide" href="pages/detail.html?id=3" data-slide="3">
+            <div class="slide-bg slide-bg-3">
+              
+            </div>
+            <div class="slide-caption">
+              <!-- <h2>【 共同繁荣 · 一个都不能少 】</h2>
+              <p>全面建成小康社会，各民族携手前行</p> -->
+            </div>
+          </a>
+
+          <!-- 轮播项 4 -->
+          <a class="carousel-slide" href="pages/detail.html?id=4" data-slide="4">
+            <div class="slide-bg slide-bg-4">
+              
+            </div>
+            <div class="slide-caption">
+              <!-- <h2>【 守望相助 · 同心筑梦 】</h2>
+              <p>共建美好家园，共筑中华民族伟大复兴中国梦</p> -->
+            </div>
+          </a>
+
+        </div>
+
+        <!-- 轮播控制 -->
+        <button class="carousel-btn prev" id="carouselPrev" aria-label="上一张">‹</button>
+        <button class="carousel-btn next" id="carouselNext" aria-label="下一张">›</button>
+        <button type="button" class="slide-video-sound is-visible" id="slideVideoSound" aria-label="开启声音" title="开启声音">
+          <svg class="icon-muted" viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true">
+            <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+          </svg>
+          <svg class="icon-unmuted" viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true">
+            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+          </svg>
+        </button>
+        <div class="carousel-dots" id="carouselDots"></div>
+      </div>
+
+      <div class="scroll-hint">
+        <span>向下滚动</span>
+        <i class="scroll-arrow"></i>
+      </div>
+    </section>
+
+    <!-- 第二屏：代表性项目名录（参考非遗网结构） -->
+    <section class="section section-projects" id="section-projects" data-index="1">
+      <div class="section-inner">
+        <div class="section-title">
+          <h2>代表性项目名录</h2>
+          <p class="subtitle">铸牢中华民族共同体意识 · 各民族像石榴籽一样紧紧抱在一起</p>
+        </div>
+
+        <div class="project-catalog">
+          <div class="project-catalog-head">
+            <p>五大主题分类 · 点击卡片进入详情</p>
+          </div>
+
+          <!-- 非遗网风格：竖向长方形、不规则位置、上下交替入场 -->
+          <div class="project-stage">
+            <ul class="project-list" id="projectList">
+              <li class="project-item from-top" style="--pos-left: 6%; --pos-top: 8%;">
+                <a href="pages/project.html?cat=minning">
+                  <span class="project-name">【闽宁协作·山海情深】</span>
+                </a>
+              </li>
+              <li class="project-item from-bottom" style="--pos-left: 24%; --pos-top: 28%;">
+                <a href="pages/project.html?cat=aid">
+                  <span class="project-name">【援疆援藏·共筑繁荣】</span>
+                </a>
+              </li>
+              <li class="project-item from-top" style="--pos-left: 44%; --pos-top: 4%;">
+                <a href="pages/project.html?cat=community">
+                  <span class="project-name">【社区石榴籽服务站】</span>
+                </a>
+              </li>
+              <li class="project-item from-bottom" style="--pos-left: 64%; --pos-top: 32%;">
+                <a href="pages/project.html?cat=unity56">
+                  <span class="project-name">【56个民族一家亲】</span>
+                </a>
+              </li>
+              <li class="project-item from-top" style="--pos-left: 84%; --pos-top: 12%;">
+                <a href="pages/project.html?cat=education">
+                  <span class="project-name">【民族文化传承周】</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 第三屏：动态资讯 -->
+    <section class="section section-news" id="section-news" data-index="2">
+      <div class="section-inner">
+        <div class="section-title">
+          <h2>动态资讯</h2>
+          <p class="subtitle">关注各民族交往交流交融最新动态 · 传递民族团结进步时代强音</p>
+          <a class="more-link" href="pages/detail.html?cat=news">更多 ›</a>
+        </div>
+
+        <div class="news-layout">
+          <div class="news-col-main">
+            <a class="news-feature news-feature-vertical" href="pages/detail.html?id=n0">
+              <div class="news-img news-img-placeholder" id="newsHeadImg">
+                <span class="news-img-tag">头条</span>
+                <span class="news-img-hint"></span>
+              </div>
+              <div class="news-body">
+                <h3>惠民社区入选全国民族团结进步示范区示范单位</h3>
+                <p>火车站街惠民社区创新"六治联动"治理模式，5支"红石榴"志愿服务队穿梭在楼栋院落，实现武威市城市社区该类国家级荣誉"零"的突破。</p>
+                <time>2026-06-18</time>
+              </div>
+            </a>
+
+            <ul class="news-stats" aria-label="资讯数据概览">
+              <li><strong>10</strong><span>本月资讯</span></li>
+              <li><strong>12+</strong><span>涵盖地区</span></li>
+              <li><strong>46</strong><span>活动场次</span></li>
+              <li><strong>3.2万</strong><span>覆盖人次</span></li>
+            </ul>
+          </div>
+
+          <div class="news-col-list">
+            <h3 class="news-col-heading">最新动态</h3>
+            <ul class="news-list">
+              <li><a href="pages/detail.html?id=n1"><span class="news-date">06-15</span><span class="news-tag">节庆活动</span><span class="news-title">2026迪庆·香格里拉赛马会盛大启幕</span></a></li>
+              <li><a href="pages/detail.html?id=n2"><span class="news-date">06-12</span><span class="news-tag">文化传承</span><span class="news-title">永宁县举办民族文化传承周系列活动</span></a></li>
+              <li><a href="pages/detail.html?id=n3"><span class="news-date">06-08</span><span class="news-tag">典型示范</span><span class="news-title">米娜瓦尔·艾力获评新时代青年先锋</span></a></li>
+              <li><a href="pages/detail.html?id=n4"><span class="news-date">06-01</span><span class="news-tag">经济协作</span><span class="news-title">闽宁产业园总产值达4.9亿元</span></a></li>
+              <li><a href="pages/detail.html?id=n5"><span class="news-date">05-28</span><span class="news-tag">社区治理</span><span class="news-title">楚雄彝人古镇社区"红石榴驿站"暖民心</span></a></li>
+              <li><a href="pages/detail.html?id=n6"><span class="news-date">05-22</span><span class="news-tag">教育共育</span><span class="news-title">红星社区"青年人才驿站"助力学子圆梦</span></a></li>
+              <li><a href="pages/detail.html?id=n7"><span class="news-date">05-18</span><span class="news-tag">非遗传承</span><span class="news-title">德江傩戏传承人安永柏50年坚守舞台</span></a></li>
+              <li><a href="pages/detail.html?id=n8"><span class="news-date">05-12</span><span class="news-tag">对口支援</span><span class="news-title">察右后旗马铃薯产业产值突破15亿元</span></a></li>
+              <li><a href="pages/detail.html?id=n9"><span class="news-date">05-08</span><span class="news-tag">志愿服务</span><span class="news-title">全国"红石榴"志愿服务队扎根社区一线</span></a></li>
+            </ul>
+          </div>
+
+          <aside class="news-aside">
+            <h3 class="news-col-heading">热点专题</h3>
+            <ul class="news-topics">
+              <li><a href="culture.html">非遗传承与保护</a></li>
+              <li><a href="economy.html">闽宁协作共富路</a></li>
+              <li><a href="society.html">社区石榴籽服务</a></li>
+              <li><a href="unity.html">石榴花开一家亲</a></li>
+            </ul>
+
+            <blockquote class="news-quote">
+              <p>各民族像石榴籽一样紧紧抱在一起，手足相亲、守望相助。</p>
+              <cite>—— 铸牢中华民族共同体意识</cite>
+            </blockquote>
+
+            <div class="news-keywords">
+              <span>文化交融</span>
+              <span>经济互助</span>
+              <span>社会共治</span>
+              <span>民族团结</span>
+              <span>教育共育</span>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- 第四屏：地图（左图右数据，参考非遗网地图页） -->
+    <section class="section section-map" id="section-map" data-index="3">
+      <div class="section-inner map-inner">
+        <div class="section-title map-title">
+          <h2>民族团结地图</h2>
+          <p class="subtitle">悬停省份查看累计数据 · 右侧默认显示全国第十二批命名统计</p>
+        </div>
+
+        <div class="map-layout">
+          <div class="map-container" id="mapContainer">
+            <div class="map-frame">
+              <div class="china-map-board" id="chinaMapBoard">
+                <img class="china-map-img" src="images/china-map.png" alt="中国行政区划地图">
+                <div class="province-layer" id="provinceLayer" aria-label="省份选择"></div>
+                <button type="button" class="map-national-btn active" id="mapNationalBtn">【 全国 】</button>
+              </div>
+            </div>
+          </div>
+
+          <aside class="map-stats" id="mapStats" aria-live="polite">
+            <div class="map-stats-region" id="mapStatsRegion">【 全国 】</div>
+            <h3 class="map-stats-heading">民族团结进步示范成果</h3>
+            <ul class="map-stats-grid">
+              <li><span class="map-stats-label" data-label-key="culture">市州盟</span><span class="map-stats-num" data-stat="culture">24</span></li>
+              <li><span class="map-stats-label" data-label-key="economy">县区旗</span><span class="map-stats-num" data-stat="economy">115</span></li>
+              <li><span class="map-stats-label" data-label-key="society">乡镇街道</span><span class="map-stats-num" data-stat="society">61</span></li>
+              <li><span class="map-stats-label" data-label-key="unity">社区村镇</span><span class="map-stats-num" data-stat="unity">71</span></li>
+              <li><span class="map-stats-label" data-label-key="education">机关企业</span><span class="map-stats-num" data-stat="education">84</span></li>
+              <li><span class="map-stats-label" data-label-key="volunteer">学校及其他</span><span class="map-stats-num" data-stat="volunteer">133</span></li>
+            </ul>
+            <p class="map-stats-total">
+              <span id="mapStatsTotalLabel">第十二批</span>：<strong id="mapStatsTotal">488</strong> 个
+              <span id="mapStatsCumulativeWrap"> · 累计 <strong id="mapStatsCumulative">2543</strong> 个</span>
+            </p>
+            <p class="map-stats-info" id="mapStatsInfo">第十二批于2026年1月命名488个示范区示范单位（命名有效期5年）。截至2026年1月，全国累计命名十二批共2543个。</p>
+            <p class="map-stats-note" id="mapStatsNote">数据来源：国家民委民委发〔2026〕31号。分项为第十二批全国命名结构。</p>
+          </aside>
+        </div>
+
+        <p class="map-hint">悬停省份名称切换右侧数据 · 地图样式参考中国非物质文化遗产网</p>
+      </div>
+    </section>
+
+    <!-- 第五屏：同心寄语留言板 -->
+    <section class="section section-messages" id="section-messages" data-index="4">
+      <!-- 漂浮装饰：气球和花朵 -->
+      <div class="floating-decorations" aria-hidden="true">
+        <span class="float-balloon b1"></span>
+        <span class="float-balloon b2"></span>
+        <span class="float-balloon b3"></span>
+        <span class="float-balloon b4"></span>
+        <span class="float-balloon b5"></span>
+        <span class="float-balloon b6"></span>
+        <span class="float-flower f1">🌸</span>
+        <span class="float-flower f2">🌺</span>
+        <span class="float-flower f3">🌷</span>
+        <span class="float-flower f4">🌼</span>
+        <span class="float-flower f5">🌻</span>
+        <span class="float-flower f6">💐</span>
+        <span class="float-flower f7">🌹</span>
+        <span class="float-flower f8">🌾</span>
+      </div>
+      <div class="section-inner messages-inner">
+        <div class="section-title messages-title">
+          <h2>同心寄语留言板</h2>
+          <p class="subtitle">写下你的心声，让温暖的话语在留言板上轻轻飘动</p>
+        </div>
+
+        <div class="messages-layout">
+          <form class="messages-form" id="messageForm" novalidate autocomplete="off">
+            <label class="messages-field">
+              <span class="messages-label">昵称</span>
+              <input type="text" id="messageNickname" name="message-nickname" maxlength="20" placeholder="请输入昵称" required autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+            </label>
+            <label class="messages-field">
+              <span class="messages-label">留言内容</span>
+              <textarea id="messageContent" name="content" rows="4" maxlength="120" placeholder="写下你的同心寄语…" required></textarea>
+            </label>
+            <p class="messages-tip" id="messageTip" role="alert" hidden></p>
+            <button type="submit" class="messages-submit">提交寄语</button>
+          </form>
+
+          <div class="messages-board-wrap">
+            <div class="messages-board" id="messageBoard" aria-live="polite"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="js/nav.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/map-provinces.js"></script>
+  <script src="js/index.js"></script>
+  <script src="js/message-board.js"></script>
+</body>
+</html>

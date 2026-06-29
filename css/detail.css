@@ -1,0 +1,296 @@
+/* ===== 详情页 ===== */
+html.detail-page,
+html.detail-page body {
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: auto;
+  min-height: 100%;
+}
+
+.detail-main {
+  background: var(--bg-page);
+  min-height: 100vh;
+}
+
+.detail-hero {
+  position: relative;
+  margin-top: var(--header-h);
+  height: 220px;
+  overflow: hidden;
+  background-color: #5d4037;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.detail-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+.detail-hero-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+  margin: 0 auto;
+  height: 100%;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-bottom: 32px;
+  color: #fff;
+}
+
+.detail-hero-tag {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 4px 12px;
+  margin-bottom: 10px;
+  font-size: 12px;
+  letter-spacing: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.detail-hero h1 {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  line-height: 1.4;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+.detail-hero p {
+  margin-top: 8px;
+  font-size: 15px;
+  opacity: 0.9;
+  letter-spacing: 1px;
+}
+
+/* 与首页轮播 slide-bg-1~4 同图，勿用 background 简写 */
+.detail-hero.theme-1 {
+  background-image: url('../images/d8d928ab7ac4481f3e7cd6b3402bc11e.jpg');
+  background-color: #6b8b4c;
+}
+.detail-hero.theme-2 { background-image: url('../images/7ccf00435465ce51ca224dd5684185ba.jpg'); }
+.detail-hero.theme-3 {
+  background-image: url('../images/969ea0d71c3330730f1b3949f2a8e3b9.jpg');
+  background-color: #216fa0;
+}
+.detail-hero.theme-4 {
+  background-image: url('../images/6646b1ec1d5b17a6dc02be0eea925b17.png');
+  background-color: #fefefe;
+}
+.detail-hero.theme-default { background-image: linear-gradient(135deg, #5d4037, #8d6e63); }
+
+.detail-hero.theme-unity-handshake { background-image: url("/images/VCG211437936347.jpg"); }
+.detail-hero.theme-unity-prosper { background-image: url("/images/VCG211584983908.jpg"); }
+.detail-hero.theme-unity-identity { background-image: url("/images/VCG211538739159.jpg"); }
+
+.detail-hero.theme-news { background-image: linear-gradient(135deg, #5d4037, #8d6e63 50%, #7f0000); }
+
+.detail-cover {
+  margin: 0 0 28px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.detail-cover img {
+  display: block;
+  width: 100%;
+  max-height: 360px;
+  object-fit: cover;
+}
+
+.detail-cover-placeholder {
+  height: 200px;
+  background: linear-gradient(135deg, #d7ccc8, #bcaaa4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.detail-cover-placeholder span {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+  text-align: center;
+  line-height: 1.6;
+}
+
+.detail-news-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.detail-news-list li {
+  border-bottom: 1px dashed #e0d8cc;
+}
+
+.detail-news-list li:last-child {
+  border-bottom: none;
+}
+
+.detail-news-list a {
+  display: block;
+  padding: 20px 0;
+  text-decoration: none;
+  color: inherit;
+  transition: opacity 0.2s;
+}
+
+.detail-news-list a:hover {
+  opacity: 0.85;
+}
+
+.detail-news-list a:hover strong {
+  color: var(--red-primary);
+}
+
+.detail-news-list time {
+  display: block;
+  font-size: 12px;
+  color: var(--text-light);
+  margin-bottom: 6px;
+}
+
+.detail-news-tag {
+  display: inline-block;
+  font-size: 12px;
+  color: var(--red-dark);
+  border: 1px solid rgba(183, 28, 28, 0.25);
+  padding: 2px 8px;
+  border-radius: 2px;
+  margin-bottom: 8px;
+}
+
+.detail-news-list strong {
+  display: block;
+  font-size: 17px;
+  color: var(--text-dark);
+  line-height: 1.5;
+  margin-bottom: 8px;
+  transition: color 0.2s;
+}
+
+.detail-news-list p {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.7;
+  text-indent: 0;
+  margin: 0;
+}
+
+.detail-body {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 36px 24px 64px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(6px);
+  border-radius: 8px;
+}
+
+.detail-meta {
+  font-size: 13px;
+  color: var(--text-light);
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px dashed #e0d8cc;
+}
+
+.detail-body p {
+  font-size: 15px;
+  line-height: 2.1;
+  color: var(--text-muted);
+  text-indent: 2em;
+  margin-bottom: 1em;
+}
+
+.detail-body h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--red-dark);
+  letter-spacing: 2px;
+  margin: 28px 0 14px;
+  text-indent: 0;
+}
+
+.detail-body h3::before {
+  content: "◆ ";
+  color: var(--gold);
+  font-size: 12px;
+}
+
+.detail-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 32px;
+  padding: 10px 24px;
+  background: var(--red-dark);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  border-radius: 999px;
+  transition: background 0.3s, transform 0.3s;
+}
+
+.detail-back:hover {
+  background: var(--red-primary);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .detail-hero {
+    height: 160px;
+  }
+
+  .detail-hero h1 {
+    font-size: 22px;
+    letter-spacing: 2px;
+  }
+
+  .detail-body {
+    padding: 28px 20px 48px;
+  }
+}
+
+@media (max-width: 480px) {
+  .detail-body {
+    padding: clamp(16px, 4vw, 24px) var(--pad-x, 16px) clamp(28px, 7vw, 40px);
+  }
+
+  body.unity-card-page .detail-body {
+    padding: clamp(20px, 5vw, 28px) var(--pad-x, 16px);
+  }
+}
+
+/* ===== 团结专题第二页背景图 ===== */
+body.unity-card-page {
+  position: relative;
+  background: transparent;
+}
+
+body.unity-card-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: url("../images/1b059cd05b165df7820bda4c742cb70c.jpg") center / cover no-repeat;
+}
+
+body.unity-card-page .detail-main {
+  background: transparent;
+}
+
+body.unity-card-page .detail-body {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(4px);
+}
