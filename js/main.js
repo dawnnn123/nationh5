@@ -248,18 +248,9 @@
   function tryPlayVideo(video) {
     if (!video) return;
     var playPromise = video.play();
-    if (playPromise && typeof playPromise.then === 'function') {
-      playPromise.then(function () {
-        video.classList.add('is-playing');
-      }).catch(function () {
-        video.classList.remove('is-playing');
-      });
+    if (playPromise && typeof playPromise.catch === 'function') {
+      playPromise.catch(function () {});
     }
-  }
-
-  function ensureBannerVideoPlay() {
-    if (!slideVideo || currentIndex !== 0 || !isVideoSlide(slideIndex)) return;
-    tryPlayVideo(slideVideo);
   }
 
   function bindVideoPlayFallback() {
@@ -267,34 +258,29 @@
     videoPlayBound = true;
 
     var resumeOnGesture = function () {
-      ensureBannerVideoPlay();
+      if (isVideoSlide(slideIndex)) {
+        tryPlayVideo(slideVideo);
+      }
+      document.removeEventListener('click', resumeOnGesture);
+      document.removeEventListener('touchstart', resumeOnGesture);
     };
 
-    document.addEventListener('touchstart', resumeOnGesture, { passive: true, capture: true });
-    document.addEventListener('click', resumeOnGesture, { passive: true, capture: true });
+    document.addEventListener('click', resumeOnGesture, { once: true, passive: true });
+    document.addEventListener('touchstart', resumeOnGesture, { once: true, passive: true });
 
-    slideVideo.addEventListener('loadeddata', ensureBannerVideoPlay);
-    slideVideo.addEventListener('canplay', ensureBannerVideoPlay);
-    slideVideo.addEventListener('loadedmetadata', ensureBannerVideoPlay);
+    slideVideo.addEventListener('loadeddata', function () {
+      if (isVideoSlide(slideIndex)) tryPlayVideo(slideVideo);
+    });
 
-    document.addEventListener('WeixinJSBridgeReady', ensureBannerVideoPlay, false);
+    slideVideo.addEventListener('canplay', function () {
+      if (isVideoSlide(slideIndex)) tryPlayVideo(slideVideo);
+    });
 
     document.addEventListener('visibilitychange', function () {
-      if (!document.hidden) ensureBannerVideoPlay();
-    });
-
-    window.addEventListener('pageshow', ensureBannerVideoPlay);
-
-    window.addEventListener('fullpage-section', function (e) {
-      var detail = e.detail || {};
-      if (detail.index === 0) {
-        window.setTimeout(ensureBannerVideoPlay, 80);
-        window.setTimeout(ensureBannerVideoPlay, 400);
+      if (!document.hidden && isVideoSlide(slideIndex)) {
+        tryPlayVideo(slideVideo);
       }
     });
-
-    window.setTimeout(ensureBannerVideoPlay, 300);
-    window.setTimeout(ensureBannerVideoPlay, 1200);
   }
 
   function clearAuto() {
@@ -306,7 +292,7 @@
     clearAuto();
     if (isVideoSlide(slideIndex) && slideVideo) {
       slideVideo.currentTime = 0;
-      ensureBannerVideoPlay();
+      tryPlayVideo(slideVideo);
       return;
     }
     autoTimer = setInterval(function () {
@@ -356,11 +342,10 @@
       video.muted = !videoSoundOn;
       if (videoSoundOn) video.volume = 1;
       if (i === slideIndex) {
-        ensureBannerVideoPlay();
+        tryPlayVideo(video);
       } else {
         video.pause();
         video.currentTime = 0;
-        video.classList.remove('is-playing');
       }
     });
   }
