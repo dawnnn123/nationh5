@@ -402,9 +402,11 @@ iframe {
     min-height: auto;
     max-height: none;
     overflow: visible;
+    padding: 16px;
   }
 
   .section-news .news-col-list .news-list {
+    display: block;
     flex: none;
     height: auto;
     min-height: auto;
@@ -412,16 +414,36 @@ iframe {
     overflow: visible;
   }
 
+  .section-news .news-list li {
+    display: block;
+  }
+
   .section-news .news-list a {
-    flex-wrap: wrap;
-    align-items: flex-start;
+    display: block;
+    padding: 12px 8px;
+    line-height: 1.5;
+  }
+
+  .section-news .news-date,
+  .section-news .news-tag {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 8px;
+    margin-bottom: 4px;
   }
 
   .section-news .news-title {
+    display: block;
+    width: 100%;
+    flex: none;
+    min-width: 0;
+    max-width: none;
+    margin-top: 4px;
     white-space: normal;
     overflow: visible;
     text-overflow: unset;
     line-height: 1.45;
+    color: var(--news-text);
   }
 
   .section-news .news-aside {
