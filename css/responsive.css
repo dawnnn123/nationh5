@@ -200,14 +200,14 @@ iframe {
 
 @media (max-width: 768px) {
   .slide-video-play {
-    min-width: 108px;
-    padding: 16px 22px;
-    font-size: 14px;
+    width: 56px;
+    height: 56px;
   }
 
   .slide-video-play svg {
-    width: 44px;
-    height: 44px;
+    width: 24px;
+    height: 24px;
+    margin-left: 2px;
   }
 }
 

@@ -304,12 +304,21 @@
       (slideVideo.paused || slideVideo.readyState < 2);
     playBtn.classList.toggle('is-visible', show);
     playBtn.hidden = !show;
+    refreshSoundBtnVisibility();
   }
 
   function hideVideoPlayBtn() {
     if (!playBtn) return;
     playBtn.classList.remove('is-visible');
     playBtn.hidden = true;
+    refreshSoundBtnVisibility();
+  }
+
+  function refreshSoundBtnVisibility() {
+    if (!soundBtn) return;
+    var onVideoSlide = isVideoSlide(slideIndex);
+    var playVisible = playBtn && playBtn.classList.contains('is-visible');
+    soundBtn.classList.toggle('is-visible', onVideoSlide && !playVisible && !isWeChatBrowser());
   }
 
   function bindVideoPlayFallback() {
@@ -389,12 +398,10 @@
 
   function updateSoundBtn() {
     if (!soundBtn) return;
-    var onVideoSlide = slides[slideIndex] && slides[slideIndex].classList.contains('carousel-slide-video');
-    soundBtn.classList.toggle('is-visible', onVideoSlide);
+    refreshSoundBtnVisibility();
     soundBtn.classList.toggle('is-unmuted', videoSoundOn);
     soundBtn.setAttribute('aria-label', videoSoundOn ? '关闭声音' : '开启声音');
     soundBtn.title = videoSoundOn ? '关闭声音' : '开启声音';
-    updateVideoPlayBtn();
   }
 
   function toggleVideoSound() {
@@ -459,9 +466,12 @@
     playBtn.addEventListener('click', function (e) {
       e.preventDefault();
       e.stopPropagation();
-      slideVideo.muted = !videoSoundOn;
+      videoSoundOn = true;
+      slideVideo.muted = false;
+      slideVideo.volume = 1;
       tryPlayVideo(slideVideo).then(function () {
         hideVideoPlayBtn();
+        updateSoundBtn();
       });
     });
     playBtn.addEventListener('mousedown', function (e) {
