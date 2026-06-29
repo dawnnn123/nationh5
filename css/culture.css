@@ -17,12 +17,12 @@ html.culture-page body.culture-page {
   --culture-bottom-dim: 0.4;
   --culture-top-h: clamp(280px, 38svh, 46%);
   --culture-top-pad: 24px;
-  /* 竖排 4 字可用高度 → 自动换算字号，保证不超出上半区 */
-  --culture-nav-h: max(100px, calc(var(--culture-top-h) - var(--header-h) - var(--culture-top-pad)));
-  --culture-label-fs: min(34px, max(16px, calc(var(--culture-nav-h) / 4.6)));
-  --culture-link-fs: min(18px, max(12px, calc(var(--culture-nav-h) / 5.2)));
-  --culture-label-ls: min(10px, max(3px, calc(var(--culture-label-fs) * 0.28)));
-  --culture-link-ls: min(7px, max(2px, calc(var(--culture-link-fs) * 0.35)));
+  /* 竖排 4 字可用高度 → 字号含字距，避免下半字被上下背景分界线裁切 */
+  --culture-nav-h: max(96px, calc(var(--culture-top-h) - var(--header-h) - var(--culture-top-pad) - 10px));
+  --culture-label-fs: min(32px, max(14px, calc((var(--culture-nav-h) - 20px) / 4.8)));
+  --culture-link-fs: min(17px, max(11px, calc((var(--culture-nav-h) - 14px) / 5.4)));
+  --culture-label-ls: min(7px, max(2px, calc(var(--culture-label-fs) * 0.2)));
+  --culture-link-ls: min(5px, max(1px, calc(var(--culture-link-fs) * 0.24)));
   --culture-heading: #7f0000;
   --culture-body: #453830;
 }
@@ -134,10 +134,10 @@ html.culture-page body.culture-page {
   gap: clamp(20px, 3.5vw, 56px);
   height: var(--culture-top-h);
   max-height: var(--culture-top-h);
-  padding: calc(var(--header-h) + 8px) clamp(8%, 16%, 22%) 8px 0;
+  padding: calc(var(--header-h) + 8px) clamp(8%, 16%, 22%) 14px 0;
   max-width: 100%;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .culture-label {
@@ -153,7 +153,7 @@ html.culture-page body.culture-page {
   user-select: none;
   flex: 0 0 auto;
   max-height: var(--culture-nav-h);
-  overflow: hidden;
+  overflow: visible;
   white-space: nowrap;
 }
 
@@ -347,7 +347,7 @@ html.culture-page body.culture-page {
   }
 
   .culture-topnav {
-    padding: calc(var(--header-h) + 6px) clamp(8%, 14%, 16%) 6px 0;
+    padding: calc(var(--header-h) + 6px) clamp(8%, 14%, 16%) 14px 0;
     gap: clamp(18px, 3vw, 44px);
   }
 
@@ -372,8 +372,8 @@ html.culture-page body.culture-page {
   .culture-stage {
     height: auto;
     min-height: calc(100svh - var(--culture-quiz-peek));
-    --culture-top-h: clamp(220px, 34svh, 300px);
-    --culture-top-pad: 18px;
+    --culture-top-h: clamp(248px, 38svh, 330px);
+    --culture-top-pad: 16px;
   }
 
   .culture-layout {
@@ -385,10 +385,13 @@ html.culture-page body.culture-page {
 
   .culture-topnav {
     align-self: stretch;
-    justify-self: center;
+    justify-self: stretch;
+    width: 100%;
     height: var(--culture-top-h);
     max-height: var(--culture-top-h);
-    padding: calc(var(--header-h) + 6px) var(--pad-x, 16px) 6px;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: calc(var(--header-h) + 8px) clamp(18px, 5vw, 32px) 14px clamp(14px, 4vw, 24px);
   }
 
   .culture-content {
@@ -409,17 +412,72 @@ html.culture-page body.culture-page {
 
 @media (max-width: 768px) {
   .culture-stage {
-    --culture-top-h: clamp(210px, 34svh, 280px);
-    --culture-top-pad: 16px;
+    --culture-top-h: clamp(152px, 22svh, 180px);
+    --culture-top-pad: 12px;
+    --culture-quiz-peek: 48px;
   }
 
+  /* 手机：横排目录左右铺开，避免竖排被背景分界线裁字 */
   .culture-topnav {
-    justify-self: center;
-    padding: calc(var(--header-h) + 4px) 16px 4px;
-    gap: clamp(14px, 3.5vw, 28px);
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    justify-self: stretch;
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    padding: calc(var(--header-h) + 10px) 16px 12px;
+    gap: 10px;
+    overflow: visible;
   }
 
-  .culture-menu { gap: clamp(10px, 2.5vw, 22px); }
+  .culture-label {
+    writing-mode: horizontal-tb;
+    text-orientation: mixed;
+    font-size: clamp(17px, 4.6vw, 20px);
+    letter-spacing: 4px;
+    max-height: none;
+    overflow: visible;
+    flex-shrink: 0;
+  }
+
+  .culture-menu {
+    flex: 1;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: clamp(4px, 1.8vw, 12px);
+    max-height: none;
+    min-width: 0;
+    padding-right: 0;
+  }
+
+  .menu-link {
+    writing-mode: horizontal-tb;
+    text-orientation: mixed;
+    font-size: clamp(12px, 3.1vw, 14px);
+    letter-spacing: 0.5px;
+    line-height: 1.35;
+    max-height: none;
+    overflow: visible;
+    white-space: nowrap;
+  }
+
+  .menu-link.active {
+    padding-right: 0;
+    padding-bottom: 5px;
+  }
+
+  .menu-link.active::after {
+    top: auto;
+    bottom: 0;
+    left: 8%;
+    right: 8%;
+    width: auto;
+    height: 2px;
+  }
 
   .culture-content {
     padding: 12px 16px 20px;
@@ -436,16 +494,27 @@ html.culture-page body.culture-page {
 
 @media (max-width: 480px) {
   .culture-stage {
-    --culture-top-h: clamp(220px, 36svh, 290px);
-    --culture-top-pad: 14px;
+    --culture-top-h: clamp(148px, 21svh, 168px);
+    --culture-top-pad: 10px;
   }
 
   .culture-topnav {
-    justify-content: center;
-    gap: clamp(12px, 3vw, 20px);
+    padding: calc(var(--header-h) + 8px) 12px 10px;
+    gap: 8px;
   }
 
-  .culture-menu { gap: clamp(8px, 2vw, 16px); }
+  .culture-label {
+    font-size: clamp(15px, 4.2vw, 17px);
+    letter-spacing: 3px;
+  }
+
+  .culture-menu {
+    gap: clamp(2px, 1.2vw, 8px);
+  }
+
+  .menu-link {
+    font-size: clamp(11px, 2.9vw, 13px);
+  }
 
   .heritage-side-cards {
     height: clamp(88px, 26vw, 110px);
@@ -1204,11 +1273,6 @@ html.culture-page body.culture-page {
 }
 
 @media (max-width: 768px) {
-  .culture-stage {
-    --culture-quiz-peek: 48px;
-    --culture-top-h: 34%;
-  }
-
   .culture-quiz {
     padding: 8px 16px 56px;
   }
