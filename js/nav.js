@@ -15,8 +15,19 @@
     document.body.classList.toggle('nav-open', open);
   }
 
-  btn.addEventListener('click', function () {
+  btn.addEventListener('click', function (e) {
+    e.stopPropagation();
     setOpen(!nav.classList.contains('is-open'));
+  });
+
+  document.addEventListener('click', function (e) {
+    if (!nav.classList.contains('is-open')) return;
+    if (nav.contains(e.target) || btn.contains(e.target)) return;
+    setOpen(false);
+  });
+
+  nav.addEventListener('click', function (e) {
+    e.stopPropagation();
   });
 
   nav.querySelectorAll('a').forEach(function (link) {
