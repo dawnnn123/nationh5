@@ -17,6 +17,7 @@
       sec.classList.toggle('active', active);
       sec.classList.toggle('in-view', active);
       if (!active) {
+        sec.scrollTop = 0;
         sec.querySelectorAll('.section-inner, .map-inner, .messages-inner').forEach(function (el) {
           el.scrollTop = 0;
         });
@@ -68,9 +69,41 @@
     return false;
   }
 
+  function isMobileViewport() {
+    return window.matchMedia('(max-width: 768px)').matches;
+  }
+
+  function findScrollableFromTarget(section, target) {
+    if (!section || !target) return null;
+    var node = target;
+    while (node && node !== section && node !== document.body) {
+      if (node.nodeType !== 1) {
+        node = node.parentNode;
+        continue;
+      }
+      var style = window.getComputedStyle(node);
+      var overflowY = style.overflowY;
+      if ((overflowY === 'auto' || overflowY === 'scroll') &&
+          node.scrollHeight > node.clientHeight + 2) {
+        return node;
+      }
+      node = node.parentNode;
+    }
+    return null;
+  }
+
   function getScrollableInSection(section) {
     if (!section) return null;
-    var selectors = ['.section-inner', '.map-inner', '.messages-inner', '.project-stage'];
+
+    if (section.id === 'section-messages' && isMobileViewport()) {
+      var secStyle = window.getComputedStyle(section);
+      if ((secStyle.overflowY === 'auto' || secStyle.overflowY === 'scroll') &&
+          section.scrollHeight > section.clientHeight + 2) {
+        return section;
+      }
+    }
+
+    var selectors = ['.messages-inner', '.section-inner', '.map-inner', '.project-stage'];
     for (var s = 0; s < selectors.length; s++) {
       var nodes = section.querySelectorAll(selectors[s]);
       for (var i = 0; i < nodes.length; i++) {
@@ -91,7 +124,7 @@
   }
 
   function handleWheel(e) {
-    if (e.target.closest('textarea, input, select, .messages-form')) return;
+    if (e.target.closest('textarea, input, select, .messages-form, .messages-board, .slide-video-play')) return;
 
     var scrollEl = getActiveSectionScrollEl();
     if (scrollEl && shouldScrollInside(scrollEl, e.deltaY)) return;
@@ -122,7 +155,8 @@
   document.addEventListener('touchstart', function (e) {
     touchStartY = e.touches[0].clientY;
     touchDidInnerScroll = false;
-    touchStartScrollEl = getActiveSectionScrollEl();
+    var section = sections[currentIndex];
+    touchStartScrollEl = findScrollableFromTarget(section, e.target) || getActiveSectionScrollEl();
     touchStartScrollTop = touchStartScrollEl ? touchStartScrollEl.scrollTop : 0;
   }, { passive: true });
 
@@ -238,19 +272,44 @@
   var dots = Array.prototype.slice.call(dotsContainer.querySelectorAll('.dot'));
   var slideVideo = document.querySelector('.slide-video');
   var soundBtn = document.getElementById('slideVideoSound');
+  var playBtn = document.getElementById('slideVideoPlay');
   var videoSoundOn = false;
   var videoPlayBound = false;
+
+  function isWeChatBrowser() {
+    return /MicroMessenger/i.test(navigator.userAgent || '');
+  }
 
   function isVideoSlide(index) {
     return slides[index] && slides[index].classList.contains('carousel-slide-video');
   }
 
   function tryPlayVideo(video) {
-    if (!video) return;
+    if (!video) return Promise.resolve();
     var playPromise = video.play();
-    if (playPromise && typeof playPromise.catch === 'function') {
-      playPromise.catch(function () {});
+    if (playPromise && typeof playPromise.then === 'function') {
+      return playPromise.then(function () {
+        updateVideoPlayBtn();
+      }).catch(function () {
+        updateVideoPlayBtn();
+      });
     }
+    updateVideoPlayBtn();
+    return Promise.resolve();
+  }
+
+  function updateVideoPlayBtn() {
+    if (!playBtn || !slideVideo) return;
+    var show = isWeChatBrowser() && isVideoSlide(slideIndex) &&
+      (slideVideo.paused || slideVideo.readyState < 2);
+    playBtn.classList.toggle('is-visible', show);
+    playBtn.hidden = !show;
+  }
+
+  function hideVideoPlayBtn() {
+    if (!playBtn) return;
+    playBtn.classList.remove('is-visible');
+    playBtn.hidden = true;
   }
 
   function bindVideoPlayFallback() {
@@ -265,22 +324,42 @@
       document.removeEventListener('touchstart', resumeOnGesture);
     };
 
-    document.addEventListener('click', resumeOnGesture, { once: true, passive: true });
-    document.addEventListener('touchstart', resumeOnGesture, { once: true, passive: true });
+    if (!isWeChatBrowser()) {
+      document.addEventListener('click', resumeOnGesture, { once: true, passive: true });
+      document.addEventListener('touchstart', resumeOnGesture, { once: true, passive: true });
+    }
 
-    slideVideo.addEventListener('loadeddata', function () {
-      if (isVideoSlide(slideIndex)) tryPlayVideo(slideVideo);
-    });
+    var onVideoReady = function () {
+      if (!isVideoSlide(slideIndex)) return;
+      if (isWeChatBrowser()) {
+        updateVideoPlayBtn();
+        return;
+      }
+      tryPlayVideo(slideVideo);
+    };
 
-    slideVideo.addEventListener('canplay', function () {
-      if (isVideoSlide(slideIndex)) tryPlayVideo(slideVideo);
-    });
+    slideVideo.addEventListener('loadeddata', onVideoReady, { once: true });
+    slideVideo.addEventListener('canplay', onVideoReady, { once: true });
+
+    slideVideo.addEventListener('playing', hideVideoPlayBtn);
+    slideVideo.addEventListener('pause', updateVideoPlayBtn);
+    slideVideo.addEventListener('ended', updateVideoPlayBtn);
+
+    document.addEventListener('WeixinJSBridgeReady', function () {
+      if (isVideoSlide(slideIndex)) updateVideoPlayBtn();
+    }, false);
 
     document.addEventListener('visibilitychange', function () {
       if (!document.hidden && isVideoSlide(slideIndex)) {
-        tryPlayVideo(slideVideo);
+        if (isWeChatBrowser()) updateVideoPlayBtn();
+        else tryPlayVideo(slideVideo);
       }
     });
+
+    if (isWeChatBrowser()) {
+      window.setTimeout(updateVideoPlayBtn, 300);
+      window.setTimeout(updateVideoPlayBtn, 1200);
+    }
   }
 
   function clearAuto() {
@@ -291,8 +370,12 @@
   function scheduleAuto() {
     clearAuto();
     if (isVideoSlide(slideIndex) && slideVideo) {
-      slideVideo.currentTime = 0;
-      tryPlayVideo(slideVideo);
+      if (!isWeChatBrowser()) {
+        slideVideo.currentTime = 0;
+        tryPlayVideo(slideVideo);
+      } else {
+        updateVideoPlayBtn();
+      }
       return;
     }
     autoTimer = setInterval(function () {
@@ -311,6 +394,7 @@
     soundBtn.classList.toggle('is-unmuted', videoSoundOn);
     soundBtn.setAttribute('aria-label', videoSoundOn ? '关闭声音' : '开启声音');
     soundBtn.title = videoSoundOn ? '关闭声音' : '开启声音';
+    updateVideoPlayBtn();
   }
 
   function toggleVideoSound() {
@@ -342,7 +426,11 @@
       video.muted = !videoSoundOn;
       if (videoSoundOn) video.volume = 1;
       if (i === slideIndex) {
-        tryPlayVideo(video);
+        if (isWeChatBrowser()) {
+          updateVideoPlayBtn();
+        } else {
+          tryPlayVideo(video);
+        }
       } else {
         video.pause();
         video.currentTime = 0;
@@ -367,6 +455,20 @@
     });
   }
 
+  if (playBtn && slideVideo) {
+    playBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      slideVideo.muted = !videoSoundOn;
+      tryPlayVideo(slideVideo).then(function () {
+        hideVideoPlayBtn();
+      });
+    });
+    playBtn.addEventListener('mousedown', function (e) {
+      e.stopPropagation();
+    });
+  }
+
   if (prevBtn) {
     prevBtn.addEventListener('click', function (e) {
       e.preventDefault();
@@ -387,7 +489,8 @@
 
   slides.forEach(function (slide) {
     slide.addEventListener('click', function (e) {
-      if (e.target.closest('.carousel-btn') || e.target.closest('.carousel-dots')) {
+      if (e.target.closest('.carousel-btn') || e.target.closest('.carousel-dots') ||
+          e.target.closest('.slide-video-play') || e.target.closest('.slide-video-sound')) {
         e.preventDefault();
       }
     });

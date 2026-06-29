@@ -198,6 +198,19 @@ iframe {
   }
 }
 
+@media (max-width: 768px) {
+  .slide-video-play {
+    min-width: 108px;
+    padding: 16px 22px;
+    font-size: 14px;
+  }
+
+  .slide-video-play svg {
+    width: 44px;
+    height: 44px;
+  }
+}
+
 @media (max-width: 480px) {
   .slide-video-sound {
     right: clamp(12px, 4vw, 24px) !important;
@@ -402,8 +415,7 @@ iframe {
 
   .section-news .section-inner,
   .section-map .section-inner,
-  .section-map .map-inner,
-  .section-messages .messages-inner {
+  .section-map .map-inner {
     overflow-x: hidden;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -411,6 +423,24 @@ iframe {
     justify-content: flex-start;
     align-items: stretch;
     padding-bottom: 28px;
+  }
+
+  /* 留言板：整屏滚动，避免手机浏览器底部被裁切 */
+  .section-messages.active {
+    overflow-x: hidden;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+  }
+
+  .section-messages .messages-inner {
+    height: auto;
+    min-height: 100%;
+    max-height: none;
+    overflow: visible !important;
+    justify-content: flex-start;
+    align-items: stretch;
+    padding-bottom: calc(32px + env(safe-area-inset-bottom, 0px));
   }
 
   .section-news {
