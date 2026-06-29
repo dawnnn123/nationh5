@@ -320,12 +320,12 @@
   var videoSoundOn = false;
   var videoPlayBound = false;
 
-  function isVideoSlide(index) {
-    return slides[index] && slides[index].classList.contains('carousel-slide-video');
+  function isWeChatBrowser() {
+    return /MicroMessenger/i.test(navigator.userAgent || '');
   }
 
-  function useMobileVideoPlayBtn() {
-    return isMobileViewport();
+  function isVideoSlide(index) {
+    return slides[index] && slides[index].classList.contains('carousel-slide-video');
   }
 
   function tryPlayVideo(video) {
@@ -344,7 +344,7 @@
 
   function updateVideoPlayBtn() {
     if (!playBtn || !slideVideo) return;
-    var show = useMobileVideoPlayBtn() && isVideoSlide(slideIndex) &&
+    var show = isWeChatBrowser() && isVideoSlide(slideIndex) &&
       (slideVideo.paused || slideVideo.readyState < 2);
     playBtn.classList.toggle('is-visible', show);
     playBtn.hidden = !show;
@@ -362,7 +362,7 @@
     if (!soundBtn) return;
     var onVideoSlide = isVideoSlide(slideIndex);
     var playVisible = playBtn && playBtn.classList.contains('is-visible');
-    soundBtn.classList.toggle('is-visible', onVideoSlide && !playVisible && !useMobileVideoPlayBtn());
+    soundBtn.classList.toggle('is-visible', onVideoSlide && !playVisible && !isWeChatBrowser());
   }
 
   function bindVideoPlayFallback() {
@@ -377,14 +377,14 @@
       document.removeEventListener('touchstart', resumeOnGesture);
     };
 
-    if (!useMobileVideoPlayBtn()) {
+    if (!isWeChatBrowser()) {
       document.addEventListener('click', resumeOnGesture, { once: true, passive: true });
       document.addEventListener('touchstart', resumeOnGesture, { once: true, passive: true });
     }
 
     var onVideoReady = function () {
       if (!isVideoSlide(slideIndex)) return;
-      if (useMobileVideoPlayBtn()) {
+      if (isWeChatBrowser()) {
         updateVideoPlayBtn();
         return;
       }
@@ -404,12 +404,12 @@
 
     document.addEventListener('visibilitychange', function () {
       if (!document.hidden && isVideoSlide(slideIndex)) {
-        if (useMobileVideoPlayBtn()) updateVideoPlayBtn();
+        if (isWeChatBrowser()) updateVideoPlayBtn();
         else tryPlayVideo(slideVideo);
       }
     });
 
-    if (useMobileVideoPlayBtn()) {
+    if (isWeChatBrowser()) {
       window.setTimeout(updateVideoPlayBtn, 300);
       window.setTimeout(updateVideoPlayBtn, 1200);
     }
@@ -423,7 +423,7 @@
   function scheduleAuto() {
     clearAuto();
     if (isVideoSlide(slideIndex) && slideVideo) {
-      if (!useMobileVideoPlayBtn()) {
+      if (!isWeChatBrowser()) {
         slideVideo.currentTime = 0;
         tryPlayVideo(slideVideo);
       } else {
@@ -477,7 +477,7 @@
       video.muted = !videoSoundOn;
       if (videoSoundOn) video.volume = 1;
       if (i === slideIndex) {
-        if (useMobileVideoPlayBtn()) {
+        if (isWeChatBrowser()) {
           updateVideoPlayBtn();
         } else {
           tryPlayVideo(video);
@@ -504,7 +504,7 @@
     videoSoundOn = false;
     slideVideo.muted = true;
     slideVideo.volume = 0;
-    if (useMobileVideoPlayBtn()) {
+    if (isWeChatBrowser()) {
       updateVideoPlayBtn();
       return;
     }
