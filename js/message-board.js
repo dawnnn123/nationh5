@@ -201,9 +201,16 @@
       return;
     }
 
+    var laneWidth = laneEl.clientWidth || board.clientWidth || 640;
+
+    /* 屏未可见时宽度可能为 0，延后重试 */
+    if (laneWidth < 48) {
+      scheduleLaneSpawn(laneIdx, LANE_RETRY_SEC);
+      return;
+    }
+
     var msg = pickRandomMessage(currentList);
     var bubble = createBubbleEl(msg, laneIdx);
-    var laneWidth = laneEl.clientWidth || board.clientWidth || 640;
 
     laneEl.style.setProperty('--lane-width', laneWidth + 'px');
     laneEl.appendChild(bubble);
@@ -217,12 +224,20 @@
 
     scheduleLaneFollow(laneIdx, bubbleWidth);
 
-    bubble.addEventListener('animationend', function () {
+    var bubbleDone = false;
+    function onBubbleDone() {
+      if (bubbleDone) return;
+      bubbleDone = true;
+      window.clearTimeout(fallbackTimer);
       removeBubble(bubble);
       if (getLaneBubbleCount(laneIdx) === 0 && !laneNextTimer[laneIdx]) {
         scheduleLaneSpawn(laneIdx, randomBetween(0.35, 0.9));
       }
-    }, { once: true });
+    }
+
+    var fallbackTimer = window.setTimeout(onBubbleDone, (duration + 0.6) * 1000);
+
+    bubble.addEventListener('animationend', onBubbleDone, { once: true });
   }
 
   function startFloating(list) {
@@ -328,9 +343,40 @@
   window.addEventListener('resize', function () {
     window.clearTimeout(resizeTimer);
     resizeTimer = window.setTimeout(function () {
+      var section = document.getElementById('section-messages');
+      if (section && !section.classList.contains('active')) return;
       renderBoard(currentList.length ? currentList : loadMessages());
     }, 200);
   });
 
-  startFloating(loadMessages());
+  function bindSectionVisibility() {
+    var section = document.getElementById('section-messages');
+    if (!section) {
+      startFloating(loadMessages());
+      return;
+    }
+
+    var wasActive = section.classList.contains('active');
+
+    function onActiveChange() {
+      var isActive = section.classList.contains('active');
+      if (isActive && !wasActive) {
+        renderBoard(loadMessages());
+      } else if (!isActive && wasActive) {
+        stopFloating();
+        board.innerHTML = '';
+        laneEls = [];
+      }
+      wasActive = isActive;
+    }
+
+    var observer = new MutationObserver(onActiveChange);
+    observer.observe(section, { attributes: true, attributeFilter: ['class'] });
+
+    if (wasActive) {
+      renderBoard(loadMessages());
+    }
+  }
+
+  bindSectionVisibility();
 })();
