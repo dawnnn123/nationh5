@@ -54,9 +54,11 @@
     isAnimating = true;
     currentIndex = index;
     updateUI(index);
+    lockPageScroll();
 
     setTimeout(function () {
       isAnimating = false;
+      lockPageScroll();
     }, ANIM_DURATION);
   }
 
@@ -131,6 +133,17 @@
     return getScrollableInSection(sections[currentIndex]);
   }
 
+  function isSectionWithoutInnerScroll(section) {
+    if (!section) return false;
+    return section.id === 'section-banner' || section.id === 'section-projects';
+  }
+
+  function lockPageScroll() {
+    if (window.scrollX || window.scrollY) {
+      window.scrollTo(0, 0);
+    }
+  }
+
   function handleWheel(e) {
     if (e.target.closest('textarea, input, select, .messages-form, .messages-board, .slide-video-play')) return;
 
@@ -164,15 +177,38 @@
     touchStartY = e.touches[0].clientY;
     touchDidInnerScroll = false;
     var section = sections[currentIndex];
+    if (isSectionWithoutInnerScroll(section)) {
+      lockPageScroll();
+    }
     touchStartScrollEl = findScrollableFromTarget(section, e.target) || getActiveSectionScrollEl();
     touchStartScrollTop = touchStartScrollEl ? touchStartScrollEl.scrollTop : 0;
   }, { passive: true });
 
-  document.addEventListener('touchmove', function () {
-    if (touchStartScrollEl && Math.abs(touchStartScrollEl.scrollTop - touchStartScrollTop) > 4) {
-      touchDidInnerScroll = true;
+  document.addEventListener('touchmove', function (e) {
+    if (!e.touches || !e.touches.length) return;
+
+    if (touchStartScrollEl) {
+      if (Math.abs(touchStartScrollEl.scrollTop - touchStartScrollTop) > 4) {
+        touchDidInnerScroll = true;
+      }
+
+      var maxScroll = touchStartScrollEl.scrollHeight - touchStartScrollEl.clientHeight;
+      if (maxScroll > 1) {
+        var edgeDy = e.touches[0].clientY - touchStartY;
+        var atTop = touchStartScrollEl.scrollTop <= 0;
+        var atBottom = touchStartScrollEl.scrollTop >= maxScroll;
+        if ((edgeDy > 0 && atTop) || (edgeDy < 0 && atBottom)) {
+          e.preventDefault();
+        }
+      }
+      return;
     }
-  }, { passive: true });
+
+    /* 轮播、项目名录：阻止微信整页下拉橡皮筋，否则 touchend 位移过小切不回上一屏 */
+    if (isSectionWithoutInnerScroll(sections[currentIndex])) {
+      e.preventDefault();
+    }
+  }, { passive: false });
 
   document.addEventListener('touchend', function (e) {
     if (isAnimating || wheelLocked) return;

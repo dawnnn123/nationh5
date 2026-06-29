@@ -16,6 +16,24 @@ html {
   overflow-x: clip;
 }
 
+/* 首页全屏切屏：禁止微信/WebView 整页橡皮筋滚动 */
+html:has(.fullpage),
+body:has(.fullpage) {
+  overflow: hidden !important;
+  height: 100%;
+  overscroll-behavior: none;
+}
+
+.fullpage,
+.section {
+  overscroll-behavior: none;
+}
+
+.section-banner,
+.section-projects {
+  touch-action: none;
+}
+
 html:not(:has(.fullpage)) {
   overflow-x: hidden;
   overflow-y: auto;

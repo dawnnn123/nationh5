@@ -1300,7 +1300,7 @@ button { border: none; background: none; cursor: pointer; font: inherit; }
     max-width: 100%;
     height: auto;
     min-height: min(400px, calc(100svh - var(--header-h) - 200px));
-    overflow: visible;
+    overflow: hidden;
   }
 
   .project-list {
